@@ -103,6 +103,178 @@
       </tags>
   </entry>
   <entry>
+    <title>前端1.1-CSS</title>
+    <url>/Sakura.blog/2021/07/25/%E5%89%8D%E7%AB%AF1-1-CSS/</url>
+    <content><![CDATA[<p>层叠样式表：给HTML标签添加样式，让其变得更好看</p>
+<h1 id="语法结构"><a href="#语法结构" class="headerlink" title="语法结构"></a>语法结构</h1><figure class="highlight css"><table><tr><td class="code"><pre><span class="line">选择器&#123;</span><br><span class="line">    属性<span class="number">1</span>:值<span class="number">1</span>;</span><br><span class="line">    属性<span class="number">2</span>:值<span class="number">2</span>;</span><br><span class="line">    属性<span class="number">3</span>:值<span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="三种引入方法"><a href="#三种引入方法" class="headerlink" title="三种引入方法"></a>三种引入方法</h1><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>你好<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>style标签内部直接书写<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">        <span class="selector-tag">h1</span> &#123;</span></span><br><span class="line"><span class="css">            <span class="attribute">color</span>:burlywood;</span></span><br><span class="line"><span class="css">        &#125;</span></span><br><span class="line"><span class="css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>link标签引入外部CSS文件(最正规方式)<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;CSS文件路径&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>行内式(一般不用)<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span>=<span class="string">&quot;color:green&quot;</span>&gt;</span>你好<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="选择器"><a href="#选择器" class="headerlink" title="选择器"></a><mark>选择器</mark></h1><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;d1&quot;</span> <span class="attr">class</span>=<span class="string">&quot;c1 c2&quot;</span>&gt;</span>div</span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>div里面的p<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span>div里面的span<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;d2&quot;</span> <span class="attr">class</span>=<span class="string">&quot;c1&quot;</span>&gt;</span>ppp<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;d3&quot;</span> <span class="attr">class</span>=<span class="string">&quot;c2&quot;</span>&gt;</span>span111<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;d4&quot;</span> <span class="attr">class</span>=<span class="string">&quot;c3&quot;</span>&gt;</span>span222<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<h2 id="基本选择器"><a href="#基本选择器" class="headerlink" title="基本选择器"></a>基本选择器</h2><ol>
+<li>id选择器(用的多)<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#di</span> &#123;<span class="comment">/*找到id是d1的标签，将文本变为绿黄色*/</span></span><br><span class="line">  <span class="attribute">color</span>:greenyellow;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>类选择器(用的多)<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.c1</span> &#123;<span class="comment">/*找到class值里包含c1的标签，不同标签可以有相同class值*/</span></span><br><span class="line">  <span class="attribute">color</span>:red;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>元素/标签选择器<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">span</span> &#123;<span class="comment">/*找到所有span标签*/</span></span><br><span class="line">    <span class="attribute">color</span>:red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>通用选择器(基本不用)<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">* &#123;<span class="comment">/*找到HTML页面上所有标签*/</span></span><br><span class="line">    <span class="attribute">color</span>:green;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="组合选择器"><a href="#组合选择器" class="headerlink" title="组合选择器"></a>组合选择器</h2>标签的嵌套用亲戚关系表述层级</li>
+</ol>
+<p>下面div里面的p span都是div的后代</p>
+<p>p是div的儿子</p>
+<p>p里面的span是p的儿子 是div的孙子</p>
+<p>div下面的span是弟弟，上面的是哥哥</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>span1<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>span2<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>div</span><br><span class="line">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>div p<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>div p</span><br><span class="line">          <span class="tag">&lt;<span class="name">span</span>&gt;</span>div p span<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>span<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>span<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>span<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>span<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>后代选择器</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line"><span class="selector-tag">div</span> <span class="selector-tag">span</span> &#123;<span class="comment">/*div内部的span变为红色。空格表示的是后代*/</span></span><br><span class="line">    <span class="attribute">color</span>:red;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>儿子选择器</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line"><span class="selector-tag">div</span>&gt;<span class="selector-tag">span</span> &#123;<span class="comment">/*div内的儿子span(第一层级)变成红色*/</span></span><br><span class="line">    <span class="attribute">color</span>:red;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>毗邻选择器</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line"><span class="selector-tag">div</span>+<span class="selector-tag">span</span> &#123;<span class="comment">/*同级别紧挨着div的下面的第一个span*/</span></span><br><span class="line">    <span class="attribute">color</span>:aqua;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>弟弟选择器</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line"><span class="selector-tag">div</span>~<span class="selector-tag">span</span> &#123;<span class="comment">/*同级别在div下面的所有span*/</span></span><br><span class="line">    <span class="attribute">color</span>:red;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="属性选择器"><a href="#属性选择器" class="headerlink" title="属性选择器"></a>属性选择器</h2><p>以 [ ] 作为标志</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">username</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">username</span>=<span class="string">&quot;jason&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">username</span>=<span class="string">&quot;egon&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span> <span class="attr">username</span>=<span class="string">&quot;tank&quot;</span>&gt;</span>水箱<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>含有某个属性</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line"><span class="selector-attr">[username]</span> &#123;<span class="comment">/*将所有含属性名username的标签背景色改为红色*/</span></span><br><span class="line">   <span class="attribute">background-color</span>:red;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>含有某个属性并且有某个值</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line"><span class="selector-attr">[username=<span class="string">&#x27;jason&#x27;</span>]</span> &#123;<span class="comment">/*将所有属性名是username并且属性值是jason的标签背景色改为红色*/</span></span><br><span class="line">   <span class="attribute">background-color</span>:red;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>含有某个属性并且有某个值的某个标签</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line"><span class="selector-tag">input</span><span class="selector-attr">[username=<span class="string">&#x27;jason&#x27;</span>]</span> &#123;<span class="comment">/*将所有属性名是username并且属性值是jason的input标签背景色改为红色*/</span></span><br><span class="line">   <span class="attribute">background-color</span>:red;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>标签可以有默认的属性，还可以有自定义属性并且支持多个</p>
+<h2 id="分组与嵌套"><a href="#分组与嵌套" class="headerlink" title="分组与嵌套"></a>分组与嵌套</h2><p>分组：逗号表示并列关系，空格嵌套</p>
+<p>嵌套：多个选择器之间可以混合用，用逗号隔开。id选择器 类选择器 标签选择器用逗号隔开 </p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">#d1,.c2,span</span><br></pre></td></tr></table></figure>
+
+<h2 id="伪类选择器"><a href="#伪类选择器" class="headerlink" title="伪类选择器"></a>伪类选择器</h2><p>a:link  /*<em>访问之前的状态</em> */</p>
+<p>a:hover /*<em>鼠标悬停在上面</em> */</p>
+<p>a:active /*<em>鼠标点击不松开</em> */</p>
+<p>a:visited /*<em>访问之后的状态</em> */</p>
+<p>基本都用a标签做，其他标签也可以但是没必要</p>
+<p>input:focus /*<em>input框获取焦点：即input框被点击</em> */</p>
+<h2 id="伪元素选择器"><a href="#伪元素选择器" class="headerlink" title="伪元素选择器"></a>伪元素选择器</h2><p>p:first-letter /*<em>设置第一个文字的样式</em> */</p>
+<p>p:before /*<em>用CSS在文本开头添加文字，这种文字无法选中</em> */</p>
+<p>p:after /*<em>同上，只不过是在文本后面</em> */</p>
+<p>before和after通常用来清除浮动带来的影响：父标签塌陷问题</p>
+<h2 id="选择器优先级"><a href="#选择器优先级" class="headerlink" title="选择器优先级"></a>选择器优先级</h2><ol>
+<li>选择器相同，书写顺序不同</li>
+</ol>
+<p>就近原则：谁近听谁的</p>
+<ol start="2">
+<li>选择器不同 </li>
+</ol>
+<p>行内 &gt; id &gt; 类 &gt; 标签</p>
+<p>精确度越高的选择器的优先级越高</p>
+<hr>
+</blockquote>
+</li>
+</ol>
+<h1 id="操作标签样式"><a href="#操作标签样式" class="headerlink" title="操作标签样式"></a>操作标签样式</h1><blockquote>
+<h2 id="设置长宽"><a href="#设置长宽" class="headerlink" title="设置长宽"></a>设置长宽</h2><p>单位是px</p>
+<p>height:200px</p>
+<p>width:40px</p>
+<p>行内标签不能设置长宽，例如span，写了也不生效</p>
+<h2 id="字体属性"><a href="#字体属性" class="headerlink" title="字体属性"></a>字体属性</h2><p>font-family: 设置字体,可以写多个，第一个不生效就第二个</p>
+<p>font-size： 单位px。12,14,16,46,48 等比较合适</p>
+<p>font-weight： bolder加粗</p>
+<p>字体颜色: 直接写英文，#编号，rgb数值，rgba数值（可以设置透明度）</p>
+<h2 id="文字属性"><a href="#文字属性" class="headerlink" title="文字属性"></a>文字属性</h2><p>居中：text-align:center</p>
+<p>左对齐：text-align:left</p>
+<p>右对齐：text-align:right</p>
+<h2 id="文字装饰"><a href="#文字装饰" class="headerlink" title="文字装饰"></a>文字装饰</h2><p>text-decoration:underline(下划线),</p>
+<p>overline,line-through,</p>
+<p>none(可以用来去掉a标签的下划线)</p>
+<p>text-indent:首行缩进</p>
+<hr>
+</blockquote>
+<h1 id="背景属性"><a href="#背景属性" class="headerlink" title="背景属性"></a>背景属性</h1><blockquote>
+<p>背景图片：background-image:url(“”)<br>默认全部铺满</p>
+<p>background-repeat:no-repeat<br>不平铺</p>
+<p>background-repeat:repeat-x<br>水平方向平铺</p>
+<p>background-position:center,center<br>图片居中</p>
+<p>所有属性可以放在一起写</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">background:red url(&quot;&quot;) no-repeat center center</span><br><span class="line"><span class="comment">&lt;!--参数顺序任意--&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>background-attachment:fixed</p>
+<hr>
+</blockquote>
+<h1 id="边框"><a href="#边框" class="headerlink" title="边框"></a>边框</h1><blockquote>
+<p>border-width:</p>
+<p>border-style:</p>
+<p>border-color:</p>
+<p>border-radius:50%<br>画圆（前面要设置长宽一样）</p>
+<hr>
+</blockquote>
+<h1 id="display属性"><a href="#display属性" class="headerlink" title="display属性"></a>display属性</h1><blockquote>
+<p>display:none 隐藏标签不展示到前端而且原来的位置也让出，但是还存在于源代码</p>
+<p>display:inline 将标签设置为行内标签的特点（一行显示并且无法修改长宽）</p>
+<p>display:block 将标签设置为块级标签的特点（独占一行）</p>
+<hr>
+</blockquote>
+<h1 id="盒子模型"><a href="#盒子模型" class="headerlink" title="盒子模型"></a>盒子模型</h1><blockquote>
+<p><strong>margin</strong>：标签与标签的距离</p>
+<p>浏览器自带8px的margin，一般写的时候可以将body的margin去掉，就不会有留白</p>
+<p>如果有两个，取大的那个，不会叠加</p>
+<p><strong>padding</strong>：内容到边框的距离</p>
+<p>规律和margin一样</p>
+<hr>
+</blockquote>
+<h1 id="浮动"><a href="#浮动" class="headerlink" title="浮动"></a><mark>浮动</mark></h1><blockquote>
+<p>float:left 往左边浮动</p>
+<p>float:right 往右边浮动</p>
+<p>浮动的元素没有块级一说，本身多大，浮起来就占多大</p>
+<p>只要涉及页面布局，都用浮动来规划</p>
+<h2 id="解决浮动的影响"><a href="#解决浮动的影响" class="headerlink" title="解决浮动的影响"></a>解决浮动的影响</h2><p>造成父标签塌陷</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">&lt;!--写HTML页面之前，先写好处理浮动影响的css代码，后面只要出现塌陷，就给标签加clearfix属性即可（class=&quot;clearfix&quot;）--&gt;</span></span><br><span class="line">.clearfix:after &#123;</span><br><span class="line">      content: &quot; &quot;;</span><br><span class="line">      display: block;</span><br><span class="line">      clear: both;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+</blockquote>
+<h1 id="溢出属性"><a href="#溢出属性" class="headerlink" title="溢出属性"></a>溢出属性</h1><blockquote>
+<p>overflow:hidden  溢出部分隐藏<br>overflow:scroll  溢出部分滚动查看</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">#d1&gt;img&#123;</span><br><span class="line">    max-width: 100%</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">&lt;!--img标签占div标签的全部--&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#圆形头像的制作</span><br><span class="line"></span><br><span class="line">overflow:hidden</span><br><span class="line"></span><br><span class="line">img &#123;</span><br><span class="line">    max-width:100%;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+</blockquote>
+<h1 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h1><blockquote>
+<p>所有标签默认都是静态，无法改位置</p>
+<h2 id="相对定位"><a href="#相对定位" class="headerlink" title="相对定位"></a>相对定位</h2><p>相对于标签原来位置做移动</p>
+<p>不脱离文档流</p>
+<h2 id="绝对定位（常用）"><a href="#绝对定位（常用）" class="headerlink" title="绝对定位（常用）"></a>绝对定位（常用）</h2><p>相对于已经定位过的父标签做移动，如果没有父标签，就以body做为参照</p>
+<p>脱离文档流（原来的位置被占据）</p>
+<p>eg:小米网站购物车</p>
+<p>当你不知道其他标签的位置和参数，只知道父标签的参数，就基于该标签做定位</p>
+<h2 id="固定定位（常用）"><a href="#固定定位（常用）" class="headerlink" title="固定定位（常用）"></a>固定定位（常用）</h2><p>相对于浏览器窗口固定在某个位置</p>
+<p>脱离文档流（原来的位置被占据）</p>
+<p>eg:右侧边栏回到顶部的按钮</p>
+</blockquote>
+<blockquote>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">#d1&#123;</span><br><span class="line">   height: 100px;</span><br><span class="line">   width: 100px;</span><br><span class="line">   background-color: red;</span><br><span class="line">   left: 50px; /*从左往右 负数方向相反*/</span><br><span class="line">   top: 50px;</span><br><span class="line">   position: relative; /*相对定位  默认是static不能改位置，变成relative就说明这个标签是已定位的标签，不管有没有参数移动位置，它也是已定位标签*/</span><br><span class="line">   position: absolute;/*绝对定位*/</span><br><span class="line">   position: fixed;/*固定定位  写了fixed之后，定位就是依据浏览器窗口*/</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+</blockquote>
+<h1 id="z-index模态框"><a href="#z-index模态框" class="headerlink" title="z-index模态框"></a>z-index模态框</h1><blockquote>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">.cover&#123;</span><br><span class="line">   position: fixed;</span><br><span class="line">   left: 0;</span><br><span class="line">   bottom: 0;</span><br><span class="line">   right: 0;</span><br><span class="line">   left: 0;</span><br><span class="line">   backgroung-color: </span><br><span class="line">   z-index: 99;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.modal&#123;</span><br><span class="line">   height:</span><br><span class="line">   width:</span><br><span class="line">   background:</span><br><span class="line">   position:fixed;</span><br><span class="line">   z-index: 100;/*只要大于99就行*/</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+</blockquote>
+<h1 id="透明度opacity"><a href="#透明度opacity" class="headerlink" title="透明度opacity"></a>透明度opacity</h1><blockquote>
+<p>rgba只能影响颜色</p>
+<p>opacity可以修改颜色和字体的透明度</p>
+<hr>
+</blockquote>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>前端</tag>
+        <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>旧照片整理</title>
     <url>/Sakura.blog/2021/07/24/%E6%97%A7%E7%85%A7%E7%89%87%E6%95%B4%E7%90%86/</url>
     <content><![CDATA[<blockquote>
