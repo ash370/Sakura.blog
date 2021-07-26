@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>CentOS 7--桥接模式无法联网</title>
+    <url>/Sakura.blog/2021/07/26/CentOS-7-%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F%E6%97%A0%E6%B3%95%E8%81%94%E7%BD%91/</url>
+    <content><![CDATA[<h1 id="解决桥接模式无法联网的问题"><a href="#解决桥接模式无法联网的问题" class="headerlink" title="解决桥接模式无法联网的问题"></a>解决桥接模式无法联网的问题</h1><p id="div-border-left-pink">在网上找了教程，都是让修改配置文件，但是还是遇到一些问题</p>
+
+<p>网上解决办法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vi /etc/sysconfig/network-scripts/ifcfg-ens33</span><br></pre></td></tr></table></figure>
+
+<p>修改： ONBOOT=no改成yes 就是在系统启动时激活网卡</p>
+<p>在我的虚拟机中并没有 ifcfg-ens33 这一项配置文件，于是我按原路径找了一下，发现有 ifcfg-eno16777736 这个配置文件，</p>
+<p>所以我的网卡应该是 eno16777736</p>
+<p>然后按照网上的做法改一下，结果报错说文件是只读模式，提示用 ！ 强制修改，加了 ！ 之后还是报错“E212: 无法打开并写入文件”</p>
+<p>然后用管理员模式打开文件可以正常修改</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo vi /etc/sysconfig/network-scripts/ifcfg-eno16777736</span><br></pre></td></tr></table></figure>
+
+<p>出现这种问题应该是因为一开始DHCP没有分配IP地址，</p>
+<p>可以看一下修改之前的IP地址信息：</p>
+<p><img src="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/2ec9eafd761764274c5ecd129e496df711bc4eeb.png" alt="image"></p>
+<p>第一个是本地环回口</p>
+<p>第二个就是我的网卡，但是它没有IP地址</p>
+<p>修改之后：</p>
+<p><img src="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/57b274bee95d175b1cc64bf82844fdfc5c039eac.png" alt="image"></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>CentOS 7</tag>
+        <tag>虚拟机</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>前端1.0-HTML</title>
     <url>/Sakura.blog/2021/07/25/%E5%89%8D%E7%AB%AF1-0-HTML/</url>
     <content><![CDATA[<p id="div-border-left-pink">最近突然想学学前端，记点笔记 记录一下学习过程给自己看。</p>
