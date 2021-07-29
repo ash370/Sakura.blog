@@ -171,6 +171,46 @@
       </tags>
   </entry>
   <entry>
+    <title>Linux1.2-网络命令</title>
+    <url>/Sakura.blog/2021/07/29/Linux1-2-%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h1 id="last"><a href="#last" class="headerlink" title="last"></a>last</h1><p>所在路径：<code>/usr/bin/last</code></p>
+<p>执行权限：所有用户</p>
+<p>语法：last</p>
+<p>功能：列出目前与过去登入系统的用户信息</p>
+<h2 id="lastlog"><a href="#lastlog" class="headerlink" title="lastlog"></a>lastlog</h2><p>查看用户最后一次登陆的信息</p>
+<p><code>-u UID</code>：查看指定UID用户的最后一次登陆信息</p>
+<h1 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h1><p>所在路径：<code>/sbin/ifconfig</code></p>
+<p>执行权限：root</p>
+<p>语法：ifconfig 网卡名称 IP地址</p>
+<p>功能：查看和设置网卡信息</p>
+<h1 id="netstat"><a href="#netstat" class="headerlink" title="netstat"></a>netstat</h1><p>命令所在路径：/bin/netstat</p>
+<p>执行权限：所有用户</p>
+<p>语法：netstat [选项]</p>
+<p>功能：显示网络相关信息</p>
+<p>选项：</p>
+<ul>
+<li><code>-t</code>：TCP协议</li>
+<li><code>-u</code>：UDP协议</li>
+<li><code>-l</code>：监听</li>
+<li><code>-r</code>：路由</li>
+<li><code>-n</code>：显示IP地址和端口号</li>
+</ul>
+<p>范例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> netstat -an</span><br><span class="line">//查看本机所有的网络连接</span><br><span class="line"></span><br><span class="line"> netstat -rn</span><br><span class="line">//查看本机路由表</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h1><p>CentOS 7是 <code>nmtui</code></p>
+<p>Redhat里类似的是 <code>setup</code></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>网络</tag>
+        <tag>运维</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>前端1.0-HTML</title>
     <url>/Sakura.blog/2021/07/25/%E5%89%8D%E7%AB%AF1-0-HTML/</url>
     <content><![CDATA[<p id="div-border-left-pink">最近突然想学学前端，记点笔记 记录一下学习过程给自己看。</p>
@@ -442,46 +482,6 @@
       <tags>
         <tag>前端</tag>
         <tag>CSS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux1.2-网络命令</title>
-    <url>/Sakura.blog/2021/07/29/Linux1-2-%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<h1 id="last"><a href="#last" class="headerlink" title="last"></a>last</h1><p>所在路径：<code>/usr/bin/last</code></p>
-<p>执行权限：所有用户</p>
-<p>语法：last</p>
-<p>功能：列出目前与过去登入系统的用户信息</p>
-<h2 id="lastlog"><a href="#lastlog" class="headerlink" title="lastlog"></a>lastlog</h2><p>查看用户最后一次登陆的信息</p>
-<p><code>-u UID</code>：查看指定UID用户的最后一次登陆信息</p>
-<h1 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h1><p>所在路径：<code>/sbin/ifconfig</code></p>
-<p>执行权限：root</p>
-<p>语法：ifconfig 网卡名称 IP地址</p>
-<p>功能：查看和设置网卡信息</p>
-<h1 id="netstat"><a href="#netstat" class="headerlink" title="netstat"></a>netstat</h1><p>命令所在路径：/bin/netstat</p>
-<p>执行权限：所有用户</p>
-<p>语法：netstat [选项]</p>
-<p>功能：显示网络相关信息</p>
-<p>选项：</p>
-<ul>
-<li><code>-t</code>：TCP协议</li>
-<li><code>-u</code>：UDP协议</li>
-<li><code>-l</code>：监听</li>
-<li><code>-r</code>：路由</li>
-<li><code>-n</code>：显示IP地址和端口号</li>
-</ul>
-<p>范例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> netstat -an</span><br><span class="line">//查看本机所有的网络连接</span><br><span class="line"></span><br><span class="line"> netstat -rn</span><br><span class="line">//查看本机路由表</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h1><p>CentOS 7是 <code>nmtui</code></p>
-<p>Redhat里类似的是 <code>setup</code></p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>网络</tag>
-        <tag>运维</tag>
       </tags>
   </entry>
   <entry>
