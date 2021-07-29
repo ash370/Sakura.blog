@@ -33,6 +33,144 @@
       </tags>
   </entry>
   <entry>
+    <title>Linux1.1-用户和用户组管理</title>
+    <url>/Sakura.blog/2021/07/29/Linux1-1-%E7%94%A8%E6%88%B7%E5%92%8C%E7%94%A8%E6%88%B7%E7%BB%84%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h1 id="用户配置文件"><a href="#用户配置文件" class="headerlink" title="用户配置文件"></a>用户配置文件</h1><p>完成用户管理的工作有许多种方法，但是每一种方法实际上都是对有关的系统文件进行修改。</p>
+<p>与用户和用户组相关的信息都存放在一些系统文件中</p>
+<h2 id="etc-passwd-用户信息文件"><a href="#etc-passwd-用户信息文件" class="headerlink" title="/etc/passwd(用户信息文件)"></a>/etc/passwd(用户信息文件)</h2><p>第1字段：用户名称</p>
+<p>第2字段：密码标志（用x表示，不是明文）</p>
+<p>第3字段：UID（用户ID）</p>
+<ul>
+<li>0：超级用户</li>
+<li>1-499：系统用户（伪用户）</li>
+<li>500-65535：普通用户（<mark>CentOS 7从1000开始</mark>）</li>
+<li>第4字段：GID（用户初始组ID）<ul>
+<li>初始组：用户一登陆就立刻拥有这个用户组的相关权限。初始组只能有一个</li>
+<li>附加组：用户可以加入多个其他的用户组，并拥有这些组的权限，附加组可有多个。</li>
+</ul>
+</li>
+<li>第5字段：用户说明</li>
+<li>第6字段：家目录<ul>
+<li>普通用户：/home/用户名</li>
+<li>超级用户：/root/</li>
+</ul>
+</li>
+<li>第7字段：登录后的shell</li>
+</ul>
+<h2 id="etc-shadow-影子文件"><a href="#etc-shadow-影子文件" class="headerlink" title="/etc/shadow(影子文件)"></a>/etc/shadow(影子文件)</h2><p>实际就是passwd的影子，影子文件的权限不可读写并且不可执行，里面放着password的加密后形式</p>
+<p>第1字段：用户名</p>
+<p>第2字段：加密密码</p>
+<ul>
+<li>有<code>!!</code>或者<code>*</code>说明是没有密码，无法登录</li>
+</ul>
+<p>第3字段：密码最后一次修改日期</p>
+<h2 id="etc-group-组信息文件"><a href="#etc-group-组信息文件" class="headerlink" title="/etc/group(组信息文件)"></a>/etc/group(组信息文件)</h2><p>第1字段：组名</p>
+<p>第2字段：组的密码标志</p>
+<p>第3字段：GID</p>
+<p>第4字段：组中附加用户</p>
+<h2 id="etc-gshadow"><a href="#etc-gshadow" class="headerlink" title="/etc/gshadow"></a>/etc/gshadow</h2><p>第1字段：组名</p>
+<p>第2字段：组密码（用的不多，不推荐用）</p>
+<p>第3字段：组管理员用户名</p>
+<p>第4字段：组中附加用户</p>
+<h1 id="用户切换-su"><a href="#用户切换-su" class="headerlink" title="用户切换(su)"></a><mark>用户切换(<code>su</code>)</mark></h1><p>直接键入<code>su</code>切换，环境变量仍然是普通用户的环境变量，部分命令可能会报错</p>
+<p>键入 <code>su - </code> 或者 <code>su - root</code> ，环境变量才会换成超级用户的环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">su [选项] 用户名</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-</code>：选项只使用“-”代表连带用户的环境变量一起切换</li>
+<li><code>-c</code>：仅执行一次命令，不切换用户身份</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ su - root -c &quot;useradd user3&quot;</span><br><span class="line"># 不切换成root，但是执行useradd命令添加user3用户</span><br></pre></td></tr></table></figure>
+
+<h1 id="Linux系统用户账号的管理（命令）"><a href="#Linux系统用户账号的管理（命令）" class="headerlink" title="Linux系统用户账号的管理（命令）"></a>Linux系统用户账号的管理（命令）</h1><p>用户账号的管理工作主要涉及到用户账号的添加、修改和删除。</p>
+<p>添加用户账号就是在系统中创建一个新账号，然后为新账号分配用户号、用户组、主目录和登录Shell等资源。<mark>刚添加的账号是被锁定的，无法使用。</mark></p>
+<h2 id="useradd-添加新的用户账号"><a href="#useradd-添加新的用户账号" class="headerlink" title="useradd (添加新的用户账号)"></a>useradd (添加新的用户账号)</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">useradd 选项 用户名</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>选项:<ul>
+<li><code>-c</code> comment 指定一段注释性描述。</li>
+<li><code>-d</code> 目录 指定用户主目录，如果此目录不存在，则同时使用-m选项，可以创建主目录。</li>
+<li><code>-g</code> 用户组 指定用户所属的用户组。</li>
+<li><code>-G</code> 用户组，用户组 指定用户所属的附加组。</li>
+<li><code>-s</code>Shell文件 指定用户的登录Shell。</li>
+<li><code>-u</code> 用户号 指定用户的用户号，如果同时有-o选项，则可以重复使用其他用户的标识号。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>用户名: 指定新账号的登录名。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># useradd –d  /home/sam -m sam</span><br></pre></td></tr></table></figure>
+
+<p>此命令创建了一个用户sam，其中<code>-d</code>和<code>-m</code>选项用来为登录名sam产生一个主目录 <code>/home/sam</code>（/home为默认的用户主目录所在的父目录）。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># useradd -s /bin/sh -g group –G adm,root gem</span><br></pre></td></tr></table></figure>
+
+<p>此命令新建了一个用户gem，该用户的登录Shell是 <code>/bin/sh</code>，它属于group用户组，同时又属于adm和root用户组，其中group用户组是其主组。</p>
+<p><em>这里可能新建组：#groupadd group及groupadd adm</em></p>
+<p>增加用户账号就是在<code>/etc/passwd</code>文件中为新用户增加一条记录，同时更新其他系统文件如<code>/etc/shadow</code>, <code>/etc/group</code>等。</p>
+<p>Linux提供了集成的系统管理工具userconf，它可以用来对用户账号进行统一管理。</p>
+<h2 id="userdel-删除帐号"><a href="#userdel-删除帐号" class="headerlink" title="userdel(删除帐号)"></a>userdel(删除帐号)</h2><p>如果一个用户的账号不再使用，可以从系统中删除。删除用户账号就是要将<code>/etc/passwd</code>等系统文件中的该用户记录删除，必要时还删除用户的主目录。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">userdel 选项 用户名</span><br></pre></td></tr></table></figure>
+
+<p>常用的选项是<code>-r</code>，它的作用是把用户的主目录一起删除。</p>
+<p>如果不加这个选项，主目录是没有被删除的，<code>cd /home</code> 再 <code>ls</code> 仍然有新用户的主目录，但是 <code>/etc/passwd</code> 文件中已经没有记录了。</p>
+<h2 id="usermod-修改帐号"><a href="#usermod-修改帐号" class="headerlink" title="usermod(修改帐号)"></a>usermod(修改帐号)</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">usermod 选项 用户名</span><br></pre></td></tr></table></figure>
+
+<p>常用的选项包括<code>-c</code>, <code>-d</code>, <code>-m</code>, <code>-g</code>, <code>-G</code>, <code>-s</code>, <code>-u</code>以及<code>-o</code>等，这些选项的意义与<code>useradd</code>命令中的选项一样，可以为用户指定新的资源值。</p>
+<p>另外，有些系统可以使用选项：<code>-l 新用户名</code></p>
+<p>这个选项指定一个新的账号，即将原来的用户名改为新的用户名。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># usermod -s /bin/ksh -d /home/z –g developer sam</span><br></pre></td></tr></table></figure>
+
+<p>此命令将用户sam的登录Shell修改为<code>ksh</code>，主目录改为<code>/home/z</code>，用户组改为developer。</p>
+<h2 id="用户口令管理"><a href="#用户口令管理" class="headerlink" title="用户口令管理"></a>用户口令管理</h2><p>用户管理的一项重要内容是用户口令的管理。用户账号刚创建时没有口令，但是被系统锁定，无法使用，<mark>必须为其指定口令后才可以使用，即使是指定空口令。</mark></p>
+<p>指定和修改用户口令的Shell命令是passwd。超级用户可以为自己和其他用户指定口令，普通用户只能用它修改自己的口令。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">passwd 选项 用户名</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-l</code> 锁定口令，即禁用账号。</li>
+<li><code>-u</code> 口令解锁。</li>
+<li><code>-d</code> 使账号无口令。(然后账号就不能用了)</li>
+<li><code>-f</code> 强迫用户下次登录时修改口令。</li>
+</ul>
+<p>如果默认用户名，则修改当前用户的口令。</p>
+<p>例如，假设当前用户是sam，则下面的命令修改该用户自己的口令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ passwd </span><br><span class="line">Old password:****** </span><br><span class="line">New password:******* </span><br><span class="line">Re-enter new password:*******</span><br></pre></td></tr></table></figure>
+
+<p>如果是超级用户，可以用下列形式指定任何用户的口令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># passwd sam </span><br><span class="line">New password:******* </span><br><span class="line">Re-enter new password:*******</span><br></pre></td></tr></table></figure>
+
+<p>普通用户修改自己的口令时，passwd命令会先询问原口令，验证后再要求用户输入两遍新口令，如果两次输入的口令一致，则将这个口令指定给用户；而超级用户为用户指定口令时，就不需要知道原口令。</p>
+<h1 id="Linux系统用户组的管理（命令）"><a href="#Linux系统用户组的管理（命令）" class="headerlink" title="Linux系统用户组的管理（命令）"></a>Linux系统用户组的管理（命令）</h1><p>每个用户都有一个用户组，系统可以对一个用户组中的所有用户进行集中管理。不同Linux 系统对用户组的规定有所不同，如Linux下的用户属于与它同名的用户组，这个用户组在创建用户时同时创建。</p>
+<p>用户组的管理涉及用户组的添加、删除和修改。组的增加、删除和修改实际上就是对<code>/etc/group</code>文件的更新。</p>
+<h2 id="groupadd-增加新的用户组"><a href="#groupadd-增加新的用户组" class="headerlink" title="groupadd(增加新的用户组)"></a>groupadd(增加新的用户组)</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupadd 选项 用户组</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-g</code> GID 指定新用户组的组标识号（GID）</li>
+<li><code>-o</code> 一般与-g选项同时使用，表示新用户组的GID可以与系统已有用户组的GID相同。</li>
+</ul>
+<h2 id="groupdel-删除一个已有的用户组"><a href="#groupdel-删除一个已有的用户组" class="headerlink" title="groupdel(删除一个已有的用户组)"></a>groupdel(删除一个已有的用户组)</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupdel 用户组</span><br></pre></td></tr></table></figure>
+
+<h2 id="groupmod-修改用户组的属性"><a href="#groupmod-修改用户组的属性" class="headerlink" title="groupmod(修改用户组的属性)"></a>groupmod(修改用户组的属性)</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupmod 选项 用户组</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-g</code> GID 为用户组指定新的组标识号。</li>
+<li><code>-o</code> 与-g选项同时使用，用户组的新GID可以与系统已有用户组的GID相同。</li>
+<li><code>-n</code>新用户组 将用户组的名字改为新名字</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># groupmod –g 10000 -n group3 group2</span><br></pre></td></tr></table></figure>
+<p>此命令将组group2的标识号改为10000，组名修改为group3。</p>
+<p><mark>如果一个用户同时属于多个用户组，那么用户可以在用户组之间切换，以便具有其他用户组的权限。</mark></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ newgrp root</span><br></pre></td></tr></table></figure>
+<p>这条命令将当前用户切换到root用户组，前提条件是root用户组确实是该用户的主组或附加组。类似于用户账号的管理，用户组的管理也可以通过集成的系统管理工具来完成。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>前端1.0-HTML</title>
     <url>/Sakura.blog/2021/07/25/%E5%89%8D%E7%AB%AF1-0-HTML/</url>
     <content><![CDATA[<p id="div-border-left-pink">最近突然想学学前端，记点笔记 记录一下学习过程给自己看。</p>
@@ -307,6 +445,46 @@
       </tags>
   </entry>
   <entry>
+    <title>Linux1.2-网络命令</title>
+    <url>/Sakura.blog/2021/07/29/Linux1-2-%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h1 id="last"><a href="#last" class="headerlink" title="last"></a>last</h1><p>所在路径：<code>/usr/bin/last</code></p>
+<p>执行权限：所有用户</p>
+<p>语法：last</p>
+<p>功能：列出目前与过去登入系统的用户信息</p>
+<h2 id="lastlog"><a href="#lastlog" class="headerlink" title="lastlog"></a>lastlog</h2><p>查看用户最后一次登陆的信息</p>
+<p><code>-u UID</code>：查看指定UID用户的最后一次登陆信息</p>
+<h1 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h1><p>所在路径：<code>/sbin/ifconfig</code></p>
+<p>执行权限：root</p>
+<p>语法：ifconfig 网卡名称 IP地址</p>
+<p>功能：查看和设置网卡信息</p>
+<h1 id="netstat"><a href="#netstat" class="headerlink" title="netstat"></a>netstat</h1><p>命令所在路径：/bin/netstat</p>
+<p>执行权限：所有用户</p>
+<p>语法：netstat [选项]</p>
+<p>功能：显示网络相关信息</p>
+<p>选项：</p>
+<ul>
+<li><code>-t</code>：TCP协议</li>
+<li><code>-u</code>：UDP协议</li>
+<li><code>-l</code>：监听</li>
+<li><code>-r</code>：路由</li>
+<li><code>-n</code>：显示IP地址和端口号</li>
+</ul>
+<p>范例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> netstat -an</span><br><span class="line">//查看本机所有的网络连接</span><br><span class="line"></span><br><span class="line"> netstat -rn</span><br><span class="line">//查看本机路由表</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h1><p>CentOS 7是 <code>nmtui</code></p>
+<p>Redhat里类似的是 <code>setup</code></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>网络</tag>
+        <tag>运维</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>旧照片整理</title>
     <url>/Sakura.blog/2021/07/24/%E6%97%A7%E7%85%A7%E7%89%87%E6%95%B4%E7%90%86/</url>
     <content><![CDATA[<blockquote>
@@ -331,6 +509,404 @@
       <tags>
         <tag>摄影</tag>
         <tag>风景</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux1.0-目录、文件和基本命令</title>
+    <url>/Sakura.blog/2021/07/29/Linux1-0-%E7%9B%AE%E5%BD%95%E3%80%81%E6%96%87%E4%BB%B6%E5%92%8C%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h1 id="Linux系统目录结构"><a href="#Linux系统目录结构" class="headerlink" title="Linux系统目录结构"></a>Linux系统目录结构</h1><p>以下目录全部位于根目录 <code>/</code> 下面</p>
+<p><strong>系统启动必须</strong>：</p>
+<ul>
+<li><code>/boot</code>：存放的启动Linux 时使用的内核文件，包括连接文件以及镜像文件。</li>
+<li><code>/etc</code>：存放所有的系统需要的配置文件和子目录列表，更改目录下的文件可能会导致系统不能启动。</li>
+<li><code>/lib</code>：存放基本代码库（比如c++库），其作用类似于Windows里的DLL文件。几乎所有的应用程序都需要用到这些共享库。</li>
+<li><code>/sys</code>： 这是linux2.6内核的一个很大的变化。该目录下安装了2.6内核中新出现的一个文件系统 sysfs 。sysfs文件系统集成了下面3种文件系统的信息：针对进程信息的proc文件系统、针对设备的devfs文件系统以及针对伪终端的devpts文件系统。该文件系统是内核设备树的一个直观反映。当一个内核对象被创建的时候，对应的文件和目录也在内核对象子系统中</li>
+</ul>
+<p><strong>指令集合</strong>：</p>
+<ul>
+<li><code>/bin</code>：存放着最常用的程序和指令</li>
+<li><code>/sbin</code>：只有系统管理员能使用的程序和指令。</li>
+</ul>
+<p><strong>外部文件管理</strong>：</p>
+<ul>
+<li><code>/dev</code> ：Device(设备)的缩写, 存放的是Linux的外部设备。注意：在Linux中访问设备和访问文件的方式是相同的。</li>
+<li><code>/media</code>：类windows的其他设备，例如U盘、光驱等等，识别后linux会把设备放到这个目录下。</li>
+<li><code>/mnt</code>：临时挂载别的文件系统的，我们可以将光驱挂载在/mnt/上，然后进入该目录就可以查看光驱里的内容了。</li>
+</ul>
+<p><strong>临时文件</strong>：</p>
+<ul>
+<li><code>/run</code>：是一个临时文件系统，存储系统启动以来的信息。当系统重启时，这个目录下的文件应该被删掉或清除。如果你的系统上有 /var/run 目录，应该让它指向 run。</li>
+<li><code>/lost+found</code>：一般情况下为空的，系统非法关机后，这里就存放一些文件。</li>
+<li><code>/tmp</code>：这个目录是用来存放一些临时文件的。</li>
+</ul>
+<p><strong>账户</strong>：</p>
+<ul>
+<li><code>/root</code>：系统管理员的用户主目录。</li>
+<li><code>/home</code>：用户的主目录，以用户的账号命名的。</li>
+<li><code>/usr</code>：用户的很多应用程序和文件都放在这个目录下，类似于windows下的program files目录。</li>
+<li><code>/usr/bin</code>：系统用户使用的应用程序与指令。</li>
+<li><code>/usr/sbin</code>：超级用户使用的比较高级的管理程序和系统守护程序。</li>
+<li><code>/usr/src</code>：内核源代码默认的放置目录。</li>
+</ul>
+<p><strong>运行过程中要用</strong>：</p>
+<ul>
+<li><code>/var</code>：存放经常修改的数据，比如程序运行的日志文件（/var/log 目录下）。</li>
+<li><code>/proc</code>：管理内存空间！虚拟的目录，是系统内存的映射，我们可以直接访问这个目录来，获取系统信息。这个目录的内容不在硬盘上而是在内存里，我们也可以直接修改里面的某些文件来做修改。</li>
+</ul>
+<p><strong>扩展用的</strong>：</p>
+<ul>
+<li><code>/opt</code>：默认是空的，我们安装额外软件可以放在这个里面。</li>
+<li><code>/srv</code>：存放服务启动后需要提取的数据（不用服务器就是空）</li>
+</ul>
+<h1 id="Linux文件与目录管理"><a href="#Linux文件与目录管理" class="headerlink" title="Linux文件与目录管理"></a>Linux文件与目录管理</h1><pre><code>在Linux文件系统中有两个特殊的目录，
+
+一个用户所在的工作目录，也叫当前目录，可以使用一个点 . 来表示；
+
+另一个是当前目录的上一级目录，也叫父目录，可以使用两个点 .. 来表示。
+
+&gt; . ：代表当前的目录，也可以使用 ./ 来表示；
+
+&gt; .. ：代表上一层目录，也可以 ../ 来代表。
+</code></pre>
+<h2 id="关于根目录和家目录"><a href="#关于根目录和家目录" class="headerlink" title="关于根目录和家目录"></a>关于根目录和家目录</h2><blockquote>
+<p>Linux的目录结构为树状结构，<mark>最顶级的目录为根目录 <code>/</code><mark>。</p>
+<p><code>cd /</code>: 从任何用户执行该命令都会进入同一个目录，即所有用户共享</p>
+<hr>
+</blockquote>
+<blockquote>
+<p><code>/home</code>: 家目录（不如叫用户列表目录）</p>
+<p><code>cd /home</code> ：会显示这台机器的用户</p>
+<p><img src="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/f0062c6f75772aa3a906d3fae724002c2f6b349d.png" alt="image"></p>
+<p>我现在的用户名就叫ashlynx</p>
+<p><code>~</code>: 当前用户的家目录</p>
+<p><code>cd ~</code>  等价于 <code>cd /home/ashlynx</code> ：会进入当前用户的家目录(一般包括桌面，自己在里面的文件)</p>
+<p><img src="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/186e81a903dbab304f9493a25d322ea96b924751.png" alt="image"></p>
+<p><mark>root用户的家目录不在home里面，而在/root</mark></p>
+<p>在root下登录：</p>
+<p><code>cd ~</code>  等价于  <code>cd /root</code></p>
+<hr>
+</blockquote>
+<blockquote>
+<p>普通用户改成超级用户，仍然在家目录下面，不会变到<code>/root</code>下面</p>
+<hr>
+</blockquote>
+<p>其他目录通过挂载可以将它们添加到树中，通过解除挂载可以移除它们。</p>
+<ul>
+<li>绝对路径：路径的写法，由根目录 <code>/</code> 写起，例如： <code>/usr/share/doc</code> 这个目录。</li>
+<li>相对路径：路径的写法，不是由 <code>/</code> 写起，例如由 <code>/usr/share/doc</code> 要到 <code>/usr/share/man</code> 底下时，可以写成：<code>cd ../man</code> 这就是相对路径的写法。</li>
+</ul>
+<h2 id="处理目录的常用命令"><a href="#处理目录的常用命令" class="headerlink" title="处理目录的常用命令"></a>处理目录的常用命令</h2><ul>
+<li><code>ls</code>（英文全拼：list files）: 列出目录及文件名</li>
+<li><code>cd</code>（英文全拼：change directory）：切换目录</li>
+<li><code>pwd</code>（英文全拼：print work directory）：显示目前的目录</li>
+<li><code>mkdir</code>（英文全拼：make directory）：创建一个新的目录</li>
+<li><code>rmdir</code>（英文全拼：remove directory）：删除一个空的目录</li>
+<li><code>cp</code>（英文全拼：copy file）: 复制文件或目录</li>
+<li><code>rm</code>（英文全拼：remove）: 删除文件或目录</li>
+<li><code>mv</code>（英文全拼：move file）: 移动文件与目录，或修改文件与目录的名称</li>
+<li>man [命令] 来查看各个命令的使用文档，如 ：man cp。</li>
+</ul>
+<h3 id="ls-列出目录"><a href="#ls-列出目录" class="headerlink" title="ls(列出目录)"></a>ls(列出目录)</h3><p>选项与参数：</p>
+<ul>
+<li><code>-a</code>：全部的文件，连同隐藏文件( 开头为 . 的文件) 一起列出来(常用)</li>
+<li><code>-d</code>：仅列出目录本身，而不是列出目录内的文件数据(常用)</li>
+<li><code>-l</code>：长数据串列出，包含文件的属性与权限等等数据；(常用)</li>
+<li><code>-i</code>：可以查看索引节点号 </li>
+</ul>
+<p>将家目录下的所有文件列出来(含属性与隐藏档) <code>ls -al ~</code></p>
+<h3 id="cd-切换目录"><a href="#cd-切换目录" class="headerlink" title="cd(切换目录)"></a>cd(切换目录)</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd [相对路径或绝对路径]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用绝对路径切换到 runoob 目录 <code>cd/root/runoob/</code></li>
+<li>使用相对路径切换到 runoob 目录 <code>cd ./runoob/</code></li>
+<li>表示回到自己的家目录 <code>cd ~</code></li>
+<li>表示去到目前的上一级目录 <code>cd ..</code></li>
+</ul>
+<h3 id="pwd-显示目前所在的目录"><a href="#pwd-显示目前所在的目录" class="headerlink" title="pwd (显示目前所在的目录)"></a>pwd (显示目前所在的目录)</h3><p>选项与参数：</p>
+<ul>
+<li><code>-P</code>: 显示出确实的路径，而非使用连结 (link) 路径。</li>
+</ul>
+<p><img src="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/db741eebc39caaf7e80132859712dcdb96e871ca.png" alt="image"></p>
+<p><code>/bin</code>在根目录 <code>/</code> 下面，进去之后 <code>-P</code>查路径发现是<code>/usr/bin</code>，<code>/usr</code>也在根目录下面</p>
+<p>所以就是，<code>//bin</code>是连接档，连接到<code>/usr/bin</code>，这个才是正确的完整路径</p>
+<h3 id="ln-生成链接文件"><a href="#ln-生成链接文件" class="headerlink" title="ln(生成链接文件)"></a>ln(生成链接文件)</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ln -s [原文件] [目标文件]</span><br><span class="line">   -s 创建软链接 //其实类似于创建一个快捷方式(常用)</span><br></pre></td></tr></table></figure>
+<p>不加 <code>-s</code> 就生成硬链接</p>
+<blockquote>
+<h4 id="关于Linux链接"><a href="#关于Linux链接" class="headerlink" title="关于Linux链接"></a>关于Linux链接</h4><p>Linux 链接分两种，一种被称为硬链接（Hard Link），另一种被称为符号链接（Symbolic Link）。</p>
+<p><strong>硬连接</strong></p>
+<ul>
+<li>硬连接指通过索引节点来进行连接。在 Linux 的文件系统中，保存在磁盘分区中的文件不管是什么类型都给它分配一个编号，称为索引节点号(Inode Index)。在 Linux 中，多个文件名指向同一索引节点是存在的。比如：A 是 B 的硬链接（A 和 B 都是文件名），则 A 的目录项中的 inode 节点号与 B 的目录项中的 inode 节点号相同，即一个 inode 节点对应两个不同的文件名，两个文件名指向同一个文件，A 和 B 对文件系统来说是完全平等的。删除其中任何一个都不会影响另外一个的访问。</li>
+</ul>
+<blockquote>
+<ul>
+<li><code>ls -i</code> :可以查看索引节点号 </li>
+</ul>
+</blockquote>
+<ul>
+<li>硬连接的作用是允许一个文件拥有多个有效路径名，这样用户就可以建立硬连接到重要文件，以防止“误删”的功能。其原因如上所述，因为对应该目录的索引节点有一个以上的连接。只删除一个连接并不影响索引节点本身和其它的连接，只有当最后一个连接被删除后，文件的数据块及目录的连接才会被释放。也就是说，文件真正删除的条件是与之相关的所有硬连接文件均被删除。</li>
+</ul>
+<p><strong>软连接</strong></p>
+<ul>
+<li>另外一种连接称之为符号连接（Symbolic Link），也叫软连接。软链接文件有点类似于 <mark>Windows 的快捷方式</mark>。它实际上是一个特殊的文件。在符号连接中，文件实际上是一个文本文件，其中包含的有另一文件的位置信息。比如：A 是 B 的软链接（A 和 B 都是文件名），A 的目录项中的 inode 节点号与 B 的目录项中的 inode 节点号不相同，A 和 B 指向的是两个不同的 inode，继而指向两块不同的数据块。但是 A 的数据块中存放的只是 B 的路径名（可以根据这个找到 B 的目录项）。A 和 B 之间是“主从”关系，如果 B 被删除了，A 仍然存在（因为两个是不同的文件），但指向的是一个无效的链接。</li>
+<li>软链接产生的<mark>文件类型是 <code>l</code>，权限是三个 <code>rwx</code>。</mark>大小很小。类似快捷方式，便于管理。</li>
+</ul>
+<hr>
+</blockquote>
+<h3 id="mkdir-创建新目录"><a href="#mkdir-创建新目录" class="headerlink" title="mkdir (创建新目录)"></a>mkdir (创建新目录)</h3><p><mark>这是创建新的文件夹</mark></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mkdir [-mp] 目录名称</span><br></pre></td></tr></table></figure>
+
+<p>选项与参数：</p>
+<ul>
+<li><code>-m</code> ：配置权限</li>
+<li><code>-p</code> ：帮助你直接将所需要的目录(包含上一级目录)递归创建起来！就是自行帮你创建多层目录<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mkdir -p test1/test2/test3/test4</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="touch（创建新文件）"><a href="#touch（创建新文件）" class="headerlink" title="touch（创建新文件）"></a>touch（创建新文件）</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">touch 文件名称</span><br></pre></td></tr></table></figure>
+<p>这个文件可以用vim进行编辑，文件夹是不能编辑的</p>
+<p>不加路径就是在当前目录创建文件。</p>
+<h3 id="find-搜索文件"><a href="#find-搜索文件" class="headerlink" title="find(搜索文件)"></a>find(搜索文件)</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">find [搜索范围] [匹配条件]</span><br><span class="line"></span><br><span class="line">$ find /etc -name init</span><br><span class="line">//在目录/etc中查找文件init</span><br><span class="line">$ find /etc -name *init*</span><br><span class="line">//使用通配符，查找文件名包含init的文件</span><br><span class="line">-iname 不区分大小写</span><br><span class="line"></span><br><span class="line">$ find / -size +204800</span><br><span class="line">//在根目录下查找大于100MB的文件</span><br><span class="line">// +n 大于 -n 小于 n等于</span><br><span class="line"></span><br><span class="line">$ find /home -user ashlynx</span><br><span class="line">//在家目录下查找所有者为ashlynx的文件</span><br><span class="line">-group 根据所属组查找</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>-type</code> 根据文件类型查找</p>
+<ul>
+<li>  <code>f</code> 文件  <code>d</code> 目录  <code>l</code> 软链接文件</li>
+</ul>
+</li>
+</ul>
+<h3 id="locate-文件资料库中查找文件"><a href="#locate-文件资料库中查找文件" class="headerlink" title="locate(文件资料库中查找文件)"></a>locate(文件资料库中查找文件)</h3><p><code>locate</code>查找速度快，因为不是在硬盘查找</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">locate 文件名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>updatedb</code>：更新文件资料库</li>
+</ul>
+<p>但是<code>/tmp</code>里的文件不收录在文件资料库</p>
+<p>CentOS 7有这个命令，如果某些发行版没有，需要用yum命令安装</p>
+<h3 id="which-查找命令"><a href="#which-查找命令" class="headerlink" title="which(查找命令)"></a>which(查找命令)</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">which 命令名</span><br></pre></td></tr></table></figure>
+<p>还可以看见命令的别名</p>
+<p><img src="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/195f4348efc9cb48df151be50b9453d270380017.png" alt="image"></p>
+<h3 id="cp-复制文件或目录"><a href="#cp-复制文件或目录" class="headerlink" title="cp (复制文件或目录)"></a>cp (复制文件或目录)</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cp [-adfilprsu] 来源档(source) 目标档(destination)</span><br></pre></td></tr></table></figure>
+
+<p>选项与参数：</p>
+<ul>
+<li><code>-a</code>：相当於 -pdr 的意思，至於 pdr 请参考下列说明；(常用)</li>
+<li><code>-d</code>：若来源档为连结档的属性(link file)，则复制连结档属性而非文件本身；</li>
+<li><code>-f</code>：为强制(force)的意思，若目标文件已经存在且无法开启，则移除后再尝试一次；</li>
+<li><code>-i</code>：若目标档(destination)已经存在时，在覆盖时会先询问动作的进行(常用)</li>
+<li><code>-l</code>：进行硬式连结(hard link)的连结档创建，而非复制文件本身；</li>
+<li><code>-p</code>：连同文件的属性一起复制过去，而非使用默认属性(备份常用)；</li>
+<li><code>-r</code>：递归持续复制，用於目录的复制行为；(常用)</li>
+<li><code>-s</code>：复制成为符号连结档 (symbolic link)，亦即『捷径』文件；</li>
+<li><code>-u</code>：若 destination 比 source 旧才升级 destination ！</li>
+</ul>
+<h3 id="mv-移动文件与目录，或修改名称"><a href="#mv-移动文件与目录，或修改名称" class="headerlink" title="mv (移动文件与目录，或修改名称)"></a>mv (移动文件与目录，或修改名称)</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mv [-fiu] source(old name) destination(new name)</span><br></pre></td></tr></table></figure>
+
+<p>选项与参数：</p>
+<ul>
+<li><code>-f</code> ：force 强制的意思，如果目标文件已经存在，不会询问而直接覆盖；</li>
+<li><code>-i</code> ：若目标文件 (destination) 已经存在时，就会询问是否覆盖！</li>
+<li><code>-u</code> ：若目标文件已经存在，且 source 比较新，才会升级 (update)</li>
+</ul>
+<h3 id="rm-移除文件或目录"><a href="#rm-移除文件或目录" class="headerlink" title="rm (移除文件或目录)"></a>rm (移除文件或目录)</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rm [-fir] 文件或目录</span><br></pre></td></tr></table></figure>
+
+<p>选项与参数：</p>
+<ul>
+<li><code>-f</code> ：就是 force 的意思，忽略不存在的文件，不会出现警告信息；</li>
+<li><code>-i</code> ：互动模式，在删除前会询问使用者是否动作</li>
+<li><code>-r</code> ：递归删除啊！最常用在目录的删除了！这是非常危险的选项！！！</li>
+</ul>
+<p><mark>删除目录必须加 <code>-r</code>，否则直接报错不让删</mark></p>
+<h2 id="Linux文件内容查看"><a href="#Linux文件内容查看" class="headerlink" title="Linux文件内容查看"></a>Linux文件内容查看</h2><ul>
+<li><code>cat</code>  由第一行开始显示文件内容</li>
+<li><code>tac</code>  从最后一行开始显示，可以看出 tac 是 cat 的倒着写！</li>
+<li><code>nl</code>   显示的时候，顺道输出行号！</li>
+<li><code>more</code> 一页一页的显示文件内容</li>
+<li><code>less</code> 与 more 类似，但是比 more 更好的是，他可以往前翻页！</li>
+<li><code>head</code> 只看头几行</li>
+<li><code>tail</code> 只看尾巴几行</li>
+</ul>
+<h3 id="grep-在文件内容中搜寻字串匹配的行并输出"><a href="#grep-在文件内容中搜寻字串匹配的行并输出" class="headerlink" title="grep(在文件内容中搜寻字串匹配的行并输出)"></a>grep(在文件内容中搜寻字串匹配的行并输出)</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">grep -iv [指定字串] [文件]</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>-i</code>：不区分大小写</li>
+<li><code>-v</code>：排除指定字串<ul>
+<li>比如带<code>#</code>的都是注释，不想看注释就可以把带#的全部去掉</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># grep mysql /root/install.log</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/eb4fc2c3b93b5cb6f763df64fea0a7fb22fd165e.png" alt="image"></p>
+<h2 id="man-帮助命令"><a href="#man-帮助命令" class="headerlink" title="man(帮助命令)"></a>man(帮助命令)</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">man [命令或配置文件]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ man serviecs</span><br><span class="line">//查看配置文件services的帮助信息，直接写文件名，不需要绝对路径</span><br></pre></td></tr></table></figure>
+
+<h2 id="help-查看shell内置命令的帮助信息"><a href="#help-查看shell内置命令的帮助信息" class="headerlink" title="help(查看shell内置命令的帮助信息)"></a>help(查看shell内置命令的帮助信息)</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">help [命令]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>ls --help</code>：也能查看<code>ls</code>的帮助信息</li>
+</ul>
+<h2 id="压缩解压命令"><a href="#压缩解压命令" class="headerlink" title="压缩解压命令"></a>压缩解压命令</h2><h3 id="gzip-压缩文件"><a href="#gzip-压缩文件" class="headerlink" title="gzip(压缩文件)"></a>gzip(压缩文件)</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gzip [文件]</span><br></pre></td></tr></table></figure>
+<p>压缩后文件格式： <code>.gz</code></p>
+<p>对应解压缩：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gunzip xx.gz</span><br><span class="line">或</span><br><span class="line">gzip -d xx.gz</span><br></pre></td></tr></table></figure>
+
+<p>只能压缩文件，（且不保留源文件），不能压缩目录</p>
+<h3 id="tar-打包目录"><a href="#tar-打包目录" class="headerlink" title="tar(打包目录)"></a>tar(打包目录)</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar 选项[-zcf] [压缩后文件名] [目录]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-c</code>：打包</li>
+<li><code>-v</code>：显示详细信息</li>
+<li><code>-f</code>：指定文件名</li>
+<li><code>-z</code>：打包同时压缩</li>
+</ul>
+<p>解压缩：</p>
+<ul>
+<li><code>-x</code>：解包</li>
+<li><code>-v</code>：显示详细信息</li>
+<li><code>-f</code>：指定解压文件</li>
+<li><code>-z</code>：解压缩</li>
+</ul>
+<p>压缩后文件格式：<code>.tar.gz</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ tar -cf japan.tar japan</span><br><span class="line">//将japan打包成japan.tar（没有压缩，可以用gzip压缩成japan.tar.gz）</span><br><span class="line"></span><br><span class="line">$ tar -zcf japan.tar.gz japan</span><br><span class="line">//打包的同时进行压缩成japan.tar.gz</span><br><span class="line"></span><br><span class="line">$ tar -zxvf japan.tar.gz</span><br><span class="line">//解包，不加v就没有详细信息</span><br></pre></td></tr></table></figure>
+
+<h3 id="zip-Windows也支持的格式"><a href="#zip-Windows也支持的格式" class="headerlink" title="zip(Windows也支持的格式)"></a>zip(Windows也支持的格式)</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">zip 选项[-r] [压缩后文件名] [文件或目录]</span><br><span class="line"></span><br><span class="line">-r ：压缩目录</span><br></pre></td></tr></table></figure>
+<p>压缩后文件格式：<code>.zip</code></p>
+<p>解压缩：<code>unzip</code></p>
+<p>压缩比没有gzip好，没有gzip用的多</p>
+<p>但是可以压缩文件也可以压缩目录，并且可以保留源文件</p>
+<h3 id="bzip2-可保留源文件的压缩方式"><a href="#bzip2-可保留源文件的压缩方式" class="headerlink" title="bzip2(可保留源文件的压缩方式)"></a>bzip2(可保留源文件的压缩方式)</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bzip2 选项[-k] [文件]</span><br><span class="line"></span><br><span class="line">-k：产生压缩文件后保留源文件</span><br></pre></td></tr></table></figure>
+<p>压缩后文件格式：<code>.bz2</code></p>
+<p>解压缩：</p>
+<ul>
+<li><code>bunzip2</code></li>
+<li><code>bzip2 -d</code></li>
+</ul>
+<p><em>gzip不保留源文件</em></p>
+<p>压缩比惊人，压缩比较大的文件时很推荐。可以和<code>tar</code>一起用</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar -cjf //打包并压缩</span><br><span class="line">tar -xjf //解包解压缩</span><br></pre></td></tr></table></figure>
+
+<h1 id="Linux文件基本属性"><a href="#Linux文件基本属性" class="headerlink" title="Linux文件基本属性"></a>Linux文件基本属性</h1><p>Linux 系统是一种典型的多用户系统，不同的用户处于不同的地位，拥有不同的权限。</p>
+<p>为了保护系统的安全性，Linux 系统对不同的用户访问同一文件（包括目录文件）的权限做了不同的规定。</p>
+<p>在 Linux 中我们通常使用以下两个命令来修改文件或目录的所属用户与权限：</p>
+<ul>
+<li>chown (change ownerp) ： 修改所属用户与组。</li>
+<li>chmod (change mode) ： 修改用户的权限。</li>
+</ul>
+<p>每个文件的属性由左边第一部分的 10 个字符来确定（如下图）。</p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2014/06/363003_1227493859FdXT.png" alt="image"></p>
+<p>从左至右用 0-9 这些数字来表示。</p>
+<p>第 0 位确定文件类型，</p>
+<blockquote>
+<ul>
+<li>d 则是目录</li>
+<li>- 则是文件</li>
+<li>l 则表示为链接文档(link file) （软链接）</li>
+<li>b 则表示为装置文件里面的可供储存的接口设备(可随机存取装置)</li>
+<li>c 则表示为装置文件里面的串行端口设备，例如键盘、鼠标(一次性读取装置)</li>
+</ul>
+<hr>
+</blockquote>
+<p>第 1-3 位确定属主（该文件的所有者）拥有该文件的权限。</p>
+<p>第4-6位确定属组（所有者的同组用户）拥有该文件的权限，第7-9位确定其他用户拥有该文件的权限。</p>
+<p>其中，第 <strong>1</strong>、<strong>4</strong>、<strong>7</strong> 位表示读权限，如果用 r 字符表示，则有读权限，如果用 - 字符表示，则没有读权限；</p>
+<p>第 <strong>2</strong>、<strong>5</strong>、<strong>8</strong> 位表示写权限，如果用 w 字符表示，则有写权限，如果用 - 字符表示没有写权限；第 <strong>3</strong>、<strong>6</strong>、<strong>9</strong> 位表示可执行权限，如果用 x 字符表示，则有执行权限，如果用 - 字符表示，则没有执行权限。</p>
+<h2 id="Linux文件属主和属组"><a href="#Linux文件属主和属组" class="headerlink" title="Linux文件属主和属组"></a>Linux文件属主和属组</h2><p>对于文件来说，它都有一个特定的所有者，也就是对该文件具有所有权的用户。</p>
+<p>同时，在Linux系统中，用户是按组分类的，一个用户属于一个或多个组。</p>
+<p>文件所有者以外的用户又可以分为文件所有者的同组用户和其他用户。</p>
+<p>因此，Linux系统按文件所有者、文件所有者同组用户和其他用户来规定了不同的文件访问权限。</p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2014/06/file-llls22.jpg" alt="image"></p>
+<h2 id="更改文件属性"><a href="#更改文件属性" class="headerlink" title="更改文件属性"></a>更改文件属性</h2><ul>
+<li><h3 id="chgrp：更改文件属组"><a href="#chgrp：更改文件属组" class="headerlink" title="chgrp：更改文件属组"></a>chgrp：更改文件属组</h3></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chgrp [-R] 属组名 文件名</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><em>-R：</em> <em>递归更改文件属组，就是在更改某个目录文件的属组时，如果加上-R的参数，那么该目录下的所有文件的属组都会更改</em>。</p>
+</blockquote>
+<ul>
+<li><h3 id="chown：更改文件属主，也可以同时更改文件属组"><a href="#chown：更改文件属主，也可以同时更改文件属组" class="headerlink" title="chown：更改文件属主，也可以同时更改文件属组"></a>chown：更改文件属主，也可以同时更改文件属组</h3></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chown [–R] 属主名 文件名</span><br><span class="line">chown [-R] 属主名：属组名 文件名</span><br></pre></td></tr></table></figure>
+
+<p>进入 /root 目录（~）将install.log的拥有者改为bin这个账号：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@www ~] cd ~</span><br><span class="line">[root@www ~]# chown bin install.log</span><br><span class="line">[root@www ~]# ls -l</span><br><span class="line">-rw-r--r--  1 bin  users 68495 Jun 25 08:53 install.log</span><br></pre></td></tr></table></figure>
+
+<p>将install.log的拥有者与群组改回为root：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@www ~]# chown root:root install.log</span><br><span class="line">[root@www ~]# ls -l</span><br><span class="line">-rw-r--r--  1 root root 68495 Jun 25 08:53 install.log</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="chmod：更改文件9个属性"><a href="#chmod：更改文件9个属性" class="headerlink" title="chmod：更改文件9个属性"></a>chmod：更改文件9个属性</h3></li>
+</ul>
+<p>Linux文件属性有两种设置方法，一种是数字，一种是符号。</p>
+<p>Linux 文件的基本权限就有九个，分别是 <em><strong>owner/group/others(拥有者/组/其他)</strong></em> 三种身份各有自己的 <em><strong>read/write/execute</strong></em> 权限。</p>
+<p>文件的权限字符为： <em>-rwxrwxrwx</em> ，(前面有图，第一个 - 是文件类型) 这九个权限是三个三个一组的！其中，我们可以使用数字来代表各个权限，各权限的分数对照表如下：</p>
+<ul>
+<li>r:4</li>
+<li>w:2</li>
+<li>x:1</li>
+</ul>
+<p>每种身份(owner/group/others)各自的三个权限(r/w/x)分数是需要累加的，例如当权限为： -rwxrwx— 分数则是：</p>
+<ul>
+<li>owner = rwx = 4+2+1 = 7</li>
+<li>group = rwx = 4+2+1 = 7</li>
+<li>others= — = 0+0+0 = 0</li>
+</ul>
+<p>所以等一下我们设定权限的变更时，该文件的权限数字就是 770。变更权限的指令 chmod 的语法是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chmod [-R] xyz 文件或目录</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>xyz : 就是刚刚提到的数字类型的权限属性，为 rwx 属性数值的相加。</li>
+<li>-R : 进行递归(recursive)的持续变更，亦即连同次目录下的所有文件都会变更</li>
+</ul>
+</blockquote>
+<h3 id="符号类型改变文件权限"><a href="#符号类型改变文件权限" class="headerlink" title="符号类型改变文件权限"></a>符号类型改变文件权限</h3><p>还有一个改变权限的方法，从之前的介绍中我们可以发现，基本上就九个权限分别是：</p>
+<ul>
+<li>user：用户</li>
+<li>group：组</li>
+<li>others：其他</li>
+</ul>
+<p>用 u, g, o 来代表三种身份的权限</p>
+<p><strong>a</strong> 则代表 <strong>all</strong>，即全部的身份。读写的权限可以写成 <strong>r</strong>, <strong>w</strong>, <strong>x</strong>，也就是可以使用下表的方式来看：</p>
+<table>
+<thead>
+<tr>
+<th align="center">chmod</th>
+<th align="center">u</th>
+<th align="center">+(加入)</th>
+<th align="center">r</th>
+<th align="center">文件或目录</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"></td>
+<td align="center"><strong>g</strong></td>
+<td align="center"><strong>-(除去)</strong></td>
+<td align="center"><strong>r</strong></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"><strong>o</strong></td>
+<td align="center"><strong>=(设定)</strong></td>
+<td align="center"><strong>x</strong></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"><strong>a</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p>如果我们需要将文件权限设置为 <strong>-rwxr-xr–</strong> ，可以使用 <strong>chmod u=rwx,g=rx,o=r</strong> <strong>文件名</strong> 来设定:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#  touch test1    // 创建 test1 文件</span><br><span class="line"># ls -al test1    // 查看 test1 默认权限</span><br><span class="line">-rw-r--r-- 1 root root 0 Nov 15 10:32 test1</span><br><span class="line"># chmod u=rwx,g=rx,o=r  test1    // 修改 test1 权限</span><br><span class="line"># ls -al test1</span><br><span class="line">-rwxr-xr-- 1 root root 0 Nov 15 10:32 test1</span><br></pre></td></tr></table></figure>
+
+<p>而如果是要将权限去掉而不改变其他已存在的权限呢？例如要拿掉全部人的可执行权限，则：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#  chmod  a-x test1</span><br><span class="line"># ls -al test1</span><br><span class="line">-rw-r--r-- 1 root root 0 Nov 15 10:32 test1</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
       </tags>
   </entry>
 </search>

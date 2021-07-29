@@ -24,8 +24,8 @@
 
 <script>
     (function () {
-        if ('941320') {
-            if (prompt('需要输入密码喔') !== '941320') {
+        if ('') {
+            if (prompt('需要输入密码喔') !== '') {
                 alert('看来这位看官没有获取访问权限呢~');
                 if (history.length === 1) {
                     location.replace("https://ash370.github.io/Sakura.blog/"); // 这里替换成你的首页
@@ -89,7 +89,7 @@
 
 
 
-  <meta name="keywords" content="摄影,风景," />
+  <meta name="keywords" content="Linux," />
 
 
 
@@ -100,23 +100,18 @@
 
 
 
+<meta name="description" content="用户配置文件完成用户管理的工作有许多种方法，但是每一种方法实际上都是对有关的系统文件进行修改。 与用户和用户组相关的信息都存放在一些系统文件中 &#x2F;etc&#x2F;passwd(用户信息文件)第1字段：用户名称 第2字段：密码标志（用x表示，不是明文） 第3字段：UID（用户ID）  0：超级用户 1-499：系统用户（伪用户） 500-65535：普通用户（CentOS 7从1000开始） 第4字段：GI">
 <meta property="og:type" content="article">
-<meta property="og:title" content="旧照片整理">
-<meta property="og:url" content="https://ash370.github.io/Sakura.blog/2021/07/24/%E6%97%A7%E7%85%A7%E7%89%87%E6%95%B4%E7%90%86/index.html">
+<meta property="og:title" content="Linux1.1-用户和用户组管理">
+<meta property="og:url" content="https://ash370.github.io/Sakura.blog/2021/07/29/Linux1-1-%E7%94%A8%E6%88%B7%E5%92%8C%E7%94%A8%E6%88%B7%E7%BB%84%E7%AE%A1%E7%90%86/index.html">
 <meta property="og:site_name" content="Sakura">
+<meta property="og:description" content="用户配置文件完成用户管理的工作有许多种方法，但是每一种方法实际上都是对有关的系统文件进行修改。 与用户和用户组相关的信息都存放在一些系统文件中 &#x2F;etc&#x2F;passwd(用户信息文件)第1字段：用户名称 第2字段：密码标志（用x表示，不是明文） 第3字段：UID（用户ID）  0：超级用户 1-499：系统用户（伪用户） 500-65535：普通用户（CentOS 7从1000开始） 第4字段：GI">
 <meta property="og:locale">
-<meta property="og:image" content="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/4210e90fe7d9722d6b3bee50db3cf9e663186df0.jpg">
-<meta property="og:image" content="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/0c550bc75e77ab1c6035a039d3bf898304986cdb.jpg">
-<meta property="og:image" content="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/e374c2028b886fdcddf12ff069d2f240e57bbab8.jpg">
-<meta property="og:image" content="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/a8e5157b013010938d98a6533e6130a6b85a760d.jpg">
-<meta property="og:image" content="https://upload.cc/i1/2021/07/24/CZunQa.jpg">
-<meta property="article:published_time" content="2021-07-24T11:51:55.000Z">
-<meta property="article:modified_time" content="2021-07-25T02:25:00.640Z">
+<meta property="article:published_time" content="2021-07-29T12:41:03.000Z">
+<meta property="article:modified_time" content="2021-07-29T12:41:56.142Z">
 <meta property="article:author" content="吴阳阳">
-<meta property="article:tag" content="摄影">
-<meta property="article:tag" content="风景">
+<meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/4210e90fe7d9722d6b3bee50db3cf9e663186df0.jpg">
 
 
 
@@ -146,13 +141,13 @@
 
 
 
-  <link rel="canonical" href="https://ash370.github.io/Sakura.blog/2021/07/24/旧照片整理/"/>
+  <link rel="canonical" href="https://ash370.github.io/Sakura.blog/2021/07/29/Linux1-1-用户和用户组管理/"/>
 
 
 
 
 
-  <title>旧照片整理 | Sakura</title>
+  <title>Linux1.1-用户和用户组管理 | Sakura</title>
   
 
 
@@ -323,7 +318,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://ash370.github.io/Sakura.blog/Sakura.blog/2021/07/24/%E6%97%A7%E7%85%A7%E7%89%87%E6%95%B4%E7%90%86/">
+    <link itemprop="mainEntityOfPage" href="https://ash370.github.io/Sakura.blog/Sakura.blog/2021/07/29/Linux1-1-%E7%94%A8%E6%88%B7%E5%92%8C%E7%94%A8%E6%88%B7%E7%BB%84%E7%AE%A1%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -340,7 +335,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">旧照片整理</h2>
+          <h2 class="post-title" itemprop="name headline">Linux1.1-用户和用户组管理</h2>
         
 
         <div class="post-meta">
@@ -352,8 +347,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-24T19:51:55+08:00">
-                2021-07-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-29T20:41:03+08:00">
+                2021-07-29
               </time>
             
 
@@ -375,8 +370,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Sakura.blog/categories/%E6%91%84%E5%BD%B1/" itemprop="url" rel="index">
-                    <span itemprop="name">摄影</span>
+                  <a href="/Sakura.blog/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
                   </a>
                 </span>
 
@@ -411,7 +406,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  0 字
+                  2k 字
                 </span>
               
 
@@ -427,7 +422,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1 min
+                  7 min
                 </span>
               
             </div>
@@ -448,21 +443,133 @@
       
 
       
-        <blockquote>
-<hr>
-<img src="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/4210e90fe7d9722d6b3bee50db3cf9e663186df0.jpg" width="110%" height="110%">
+        <h1 id="用户配置文件"><a href="#用户配置文件" class="headerlink" title="用户配置文件"></a>用户配置文件</h1><p>完成用户管理的工作有许多种方法，但是每一种方法实际上都是对有关的系统文件进行修改。</p>
+<p>与用户和用户组相关的信息都存放在一些系统文件中</p>
+<h2 id="etc-passwd-用户信息文件"><a href="#etc-passwd-用户信息文件" class="headerlink" title="/etc/passwd(用户信息文件)"></a>/etc/passwd(用户信息文件)</h2><p>第1字段：用户名称</p>
+<p>第2字段：密码标志（用x表示，不是明文）</p>
+<p>第3字段：UID（用户ID）</p>
+<ul>
+<li>0：超级用户</li>
+<li>1-499：系统用户（伪用户）</li>
+<li>500-65535：普通用户（<mark>CentOS 7从1000开始</mark>）</li>
+<li>第4字段：GID（用户初始组ID）<ul>
+<li>初始组：用户一登陆就立刻拥有这个用户组的相关权限。初始组只能有一个</li>
+<li>附加组：用户可以加入多个其他的用户组，并拥有这些组的权限，附加组可有多个。</li>
+</ul>
+</li>
+<li>第5字段：用户说明</li>
+<li>第6字段：家目录<ul>
+<li>普通用户：/home/用户名</li>
+<li>超级用户：/root/</li>
+</ul>
+</li>
+<li>第7字段：登录后的shell</li>
+</ul>
+<h2 id="etc-shadow-影子文件"><a href="#etc-shadow-影子文件" class="headerlink" title="/etc/shadow(影子文件)"></a>/etc/shadow(影子文件)</h2><p>实际就是passwd的影子，影子文件的权限不可读写并且不可执行，里面放着password的加密后形式</p>
+<p>第1字段：用户名</p>
+<p>第2字段：加密密码</p>
+<ul>
+<li>有<code>!!</code>或者<code>*</code>说明是没有密码，无法登录</li>
+</ul>
+<p>第3字段：密码最后一次修改日期</p>
+<h2 id="etc-group-组信息文件"><a href="#etc-group-组信息文件" class="headerlink" title="/etc/group(组信息文件)"></a>/etc/group(组信息文件)</h2><p>第1字段：组名</p>
+<p>第2字段：组的密码标志</p>
+<p>第3字段：GID</p>
+<p>第4字段：组中附加用户</p>
+<h2 id="etc-gshadow"><a href="#etc-gshadow" class="headerlink" title="/etc/gshadow"></a>/etc/gshadow</h2><p>第1字段：组名</p>
+<p>第2字段：组密码（用的不多，不推荐用）</p>
+<p>第3字段：组管理员用户名</p>
+<p>第4字段：组中附加用户</p>
+<h1 id="用户切换-su"><a href="#用户切换-su" class="headerlink" title="用户切换(su)"></a><mark>用户切换(<code>su</code>)</mark></h1><p>直接键入<code>su</code>切换，环境变量仍然是普通用户的环境变量，部分命令可能会报错</p>
+<p>键入 <code>su - </code> 或者 <code>su - root</code> ，环境变量才会换成超级用户的环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su [选项] 用户名</span><br></pre></td></tr></table></figure>
 
-<hr>
-</blockquote>
-<img src="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/0c550bc75e77ab1c6035a039d3bf898304986cdb.jpg" width="75%" height="75%">
+<ul>
+<li><code>-</code>：选项只使用“-”代表连带用户的环境变量一起切换</li>
+<li><code>-c</code>：仅执行一次命令，不切换用户身份</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ su - root -c &quot;useradd user3&quot;</span><br><span class="line"># 不切换成root，但是执行useradd命令添加user3用户</span><br></pre></td></tr></table></figure>
 
-<img src="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/e374c2028b886fdcddf12ff069d2f240e57bbab8.jpg" width="60%" height="60%">
+<h1 id="Linux系统用户账号的管理（命令）"><a href="#Linux系统用户账号的管理（命令）" class="headerlink" title="Linux系统用户账号的管理（命令）"></a>Linux系统用户账号的管理（命令）</h1><p>用户账号的管理工作主要涉及到用户账号的添加、修改和删除。</p>
+<p>添加用户账号就是在系统中创建一个新账号，然后为新账号分配用户号、用户组、主目录和登录Shell等资源。<mark>刚添加的账号是被锁定的，无法使用。</mark></p>
+<h2 id="useradd-添加新的用户账号"><a href="#useradd-添加新的用户账号" class="headerlink" title="useradd (添加新的用户账号)"></a>useradd (添加新的用户账号)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd 选项 用户名</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<hr>
-<p><img src="https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/a8e5157b013010938d98a6533e6130a6b85a760d.jpg" width="80%" height="80%"><img src="https://upload.cc/i1/2021/07/24/CZunQa.jpg" width="80%" height="80%"></p>
-<hr>
-</blockquote>
+<ul>
+<li>选项:<ul>
+<li><code>-c</code> comment 指定一段注释性描述。</li>
+<li><code>-d</code> 目录 指定用户主目录，如果此目录不存在，则同时使用-m选项，可以创建主目录。</li>
+<li><code>-g</code> 用户组 指定用户所属的用户组。</li>
+<li><code>-G</code> 用户组，用户组 指定用户所属的附加组。</li>
+<li><code>-s</code>Shell文件 指定用户的登录Shell。</li>
+<li><code>-u</code> 用户号 指定用户的用户号，如果同时有-o选项，则可以重复使用其他用户的标识号。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>用户名: 指定新账号的登录名。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># useradd –d  /home/sam -m sam</span><br></pre></td></tr></table></figure>
+
+<p>此命令创建了一个用户sam，其中<code>-d</code>和<code>-m</code>选项用来为登录名sam产生一个主目录 <code>/home/sam</code>（/home为默认的用户主目录所在的父目录）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># useradd -s /bin/sh -g group –G adm,root gem</span><br></pre></td></tr></table></figure>
+
+<p>此命令新建了一个用户gem，该用户的登录Shell是 <code>/bin/sh</code>，它属于group用户组，同时又属于adm和root用户组，其中group用户组是其主组。</p>
+<p><em>这里可能新建组：#groupadd group及groupadd adm</em></p>
+<p>增加用户账号就是在<code>/etc/passwd</code>文件中为新用户增加一条记录，同时更新其他系统文件如<code>/etc/shadow</code>, <code>/etc/group</code>等。</p>
+<p>Linux提供了集成的系统管理工具userconf，它可以用来对用户账号进行统一管理。</p>
+<h2 id="userdel-删除帐号"><a href="#userdel-删除帐号" class="headerlink" title="userdel(删除帐号)"></a>userdel(删除帐号)</h2><p>如果一个用户的账号不再使用，可以从系统中删除。删除用户账号就是要将<code>/etc/passwd</code>等系统文件中的该用户记录删除，必要时还删除用户的主目录。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">userdel 选项 用户名</span><br></pre></td></tr></table></figure>
+
+<p>常用的选项是<code>-r</code>，它的作用是把用户的主目录一起删除。</p>
+<p>如果不加这个选项，主目录是没有被删除的，<code>cd /home</code> 再 <code>ls</code> 仍然有新用户的主目录，但是 <code>/etc/passwd</code> 文件中已经没有记录了。</p>
+<h2 id="usermod-修改帐号"><a href="#usermod-修改帐号" class="headerlink" title="usermod(修改帐号)"></a>usermod(修改帐号)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usermod 选项 用户名</span><br></pre></td></tr></table></figure>
+
+<p>常用的选项包括<code>-c</code>, <code>-d</code>, <code>-m</code>, <code>-g</code>, <code>-G</code>, <code>-s</code>, <code>-u</code>以及<code>-o</code>等，这些选项的意义与<code>useradd</code>命令中的选项一样，可以为用户指定新的资源值。</p>
+<p>另外，有些系统可以使用选项：<code>-l 新用户名</code></p>
+<p>这个选项指定一个新的账号，即将原来的用户名改为新的用户名。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># usermod -s /bin/ksh -d /home/z –g developer sam</span><br></pre></td></tr></table></figure>
+
+<p>此命令将用户sam的登录Shell修改为<code>ksh</code>，主目录改为<code>/home/z</code>，用户组改为developer。</p>
+<h2 id="用户口令管理"><a href="#用户口令管理" class="headerlink" title="用户口令管理"></a>用户口令管理</h2><p>用户管理的一项重要内容是用户口令的管理。用户账号刚创建时没有口令，但是被系统锁定，无法使用，<mark>必须为其指定口令后才可以使用，即使是指定空口令。</mark></p>
+<p>指定和修改用户口令的Shell命令是passwd。超级用户可以为自己和其他用户指定口令，普通用户只能用它修改自己的口令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd 选项 用户名</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-l</code> 锁定口令，即禁用账号。</li>
+<li><code>-u</code> 口令解锁。</li>
+<li><code>-d</code> 使账号无口令。(然后账号就不能用了)</li>
+<li><code>-f</code> 强迫用户下次登录时修改口令。</li>
+</ul>
+<p>如果默认用户名，则修改当前用户的口令。</p>
+<p>例如，假设当前用户是sam，则下面的命令修改该用户自己的口令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ passwd </span><br><span class="line">Old password:****** </span><br><span class="line">New password:******* </span><br><span class="line">Re-enter new password:*******</span><br></pre></td></tr></table></figure>
+
+<p>如果是超级用户，可以用下列形式指定任何用户的口令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># passwd sam </span><br><span class="line">New password:******* </span><br><span class="line">Re-enter new password:*******</span><br></pre></td></tr></table></figure>
+
+<p>普通用户修改自己的口令时，passwd命令会先询问原口令，验证后再要求用户输入两遍新口令，如果两次输入的口令一致，则将这个口令指定给用户；而超级用户为用户指定口令时，就不需要知道原口令。</p>
+<h1 id="Linux系统用户组的管理（命令）"><a href="#Linux系统用户组的管理（命令）" class="headerlink" title="Linux系统用户组的管理（命令）"></a>Linux系统用户组的管理（命令）</h1><p>每个用户都有一个用户组，系统可以对一个用户组中的所有用户进行集中管理。不同Linux 系统对用户组的规定有所不同，如Linux下的用户属于与它同名的用户组，这个用户组在创建用户时同时创建。</p>
+<p>用户组的管理涉及用户组的添加、删除和修改。组的增加、删除和修改实际上就是对<code>/etc/group</code>文件的更新。</p>
+<h2 id="groupadd-增加新的用户组"><a href="#groupadd-增加新的用户组" class="headerlink" title="groupadd(增加新的用户组)"></a>groupadd(增加新的用户组)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">groupadd 选项 用户组</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-g</code> GID 指定新用户组的组标识号（GID）</li>
+<li><code>-o</code> 一般与-g选项同时使用，表示新用户组的GID可以与系统已有用户组的GID相同。</li>
+</ul>
+<h2 id="groupdel-删除一个已有的用户组"><a href="#groupdel-删除一个已有的用户组" class="headerlink" title="groupdel(删除一个已有的用户组)"></a>groupdel(删除一个已有的用户组)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">groupdel 用户组</span><br></pre></td></tr></table></figure>
+
+<h2 id="groupmod-修改用户组的属性"><a href="#groupmod-修改用户组的属性" class="headerlink" title="groupmod(修改用户组的属性)"></a>groupmod(修改用户组的属性)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">groupmod 选项 用户组</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-g</code> GID 为用户组指定新的组标识号。</li>
+<li><code>-o</code> 与-g选项同时使用，用户组的新GID可以与系统已有用户组的GID相同。</li>
+<li><code>-n</code>新用户组 将用户组的名字改为新名字</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># groupmod –g 10000 -n group3 group2</span><br></pre></td></tr></table></figure>
+<p>此命令将组group2的标识号改为10000，组名修改为group3。</p>
+<p><mark>如果一个用户同时属于多个用户组，那么用户可以在用户组之间切换，以便具有其他用户组的权限。</mark></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ newgrp root</span><br></pre></td></tr></table></figure>
+<p>这条命令将当前用户切换到root用户组，前提条件是root用户组确实是该用户的主组或附加组。类似于用户账号的管理，用户组的管理也可以通过集成的系统管理工具来完成。</p>
 
       
     </div>
@@ -485,7 +592,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://ash370.github.io/Sakura.blog/2021/07/24/%E6%97%A7%E7%85%A7%E7%89%87%E6%95%B4%E7%90%86/" title="旧照片整理">https://ash370.github.io/Sakura.blog/2021/07/24/%E6%97%A7%E7%85%A7%E7%89%87%E6%95%B4%E7%90%86/</a>
+    <a href="https://ash370.github.io/Sakura.blog/2021/07/29/Linux1-1-%E7%94%A8%E6%88%B7%E5%92%8C%E7%94%A8%E6%88%B7%E7%BB%84%E7%AE%A1%E7%90%86/" title="Linux1.1-用户和用户组管理">https://ash370.github.io/Sakura.blog/2021/07/29/Linux1-1-%E7%94%A8%E6%88%B7%E5%92%8C%E7%94%A8%E6%88%B7%E7%BB%84%E7%AE%A1%E7%90%86/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -500,9 +607,7 @@
       
         <div class="post-tags">
           
-            <a href="/Sakura.blog/tags/%E6%91%84%E5%BD%B1/" rel="tag"><i class="fa fa-tag"></i>摄影</a>
-          
-            <a href="/Sakura.blog/tags/%E9%A3%8E%E6%99%AF/" rel="tag"><i class="fa fa-tag"></i>风景</a>
+            <a href="/Sakura.blog/tags/Linux/" rel="tag"><i class="fa fa-tag"></i>Linux</a>
           
         </div>
       
@@ -515,14 +620,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/Sakura.blog/2021/07/29/Linux1-0-%E7%9B%AE%E5%BD%95%E3%80%81%E6%96%87%E4%BB%B6%E5%92%8C%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/" rel="next" title="Linux1.0-目录、文件和基本命令">
+                <i class="fa fa-chevron-left"></i> Linux1.0-目录、文件和基本命令
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/Sakura.blog/2021/07/25/%E5%89%8D%E7%AB%AF1-0-HTML/" rel="prev" title="前端1.0-HTML">
-                前端1.0-HTML <i class="fa fa-chevron-right"></i>
+              <a href="/Sakura.blog/2021/07/29/Linux1-2-%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/" rel="prev" title="Linux1.2-网络命令">
+                Linux1.2-网络命令 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -575,8 +684,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -636,6 +754,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">用户配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#etc-passwd-%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">&#x2F;etc&#x2F;passwd(用户信息文件)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#etc-shadow-%E5%BD%B1%E5%AD%90%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">&#x2F;etc&#x2F;shadow(影子文件)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#etc-group-%E7%BB%84%E4%BF%A1%E6%81%AF%E6%96%87%E4%BB%B6"><span class="nav-number">1.3.</span> <span class="nav-text">&#x2F;etc&#x2F;group(组信息文件)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#etc-gshadow"><span class="nav-number">1.4.</span> <span class="nav-text">&#x2F;etc&#x2F;gshadow</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%88%87%E6%8D%A2-su"><span class="nav-number">2.</span> <span class="nav-text">用户切换(su)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux%E7%B3%BB%E7%BB%9F%E7%94%A8%E6%88%B7%E8%B4%A6%E5%8F%B7%E7%9A%84%E7%AE%A1%E7%90%86%EF%BC%88%E5%91%BD%E4%BB%A4%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">Linux系统用户账号的管理（命令）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#useradd-%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84%E7%94%A8%E6%88%B7%E8%B4%A6%E5%8F%B7"><span class="nav-number">3.1.</span> <span class="nav-text">useradd (添加新的用户账号)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#userdel-%E5%88%A0%E9%99%A4%E5%B8%90%E5%8F%B7"><span class="nav-number">3.2.</span> <span class="nav-text">userdel(删除帐号)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#usermod-%E4%BF%AE%E6%94%B9%E5%B8%90%E5%8F%B7"><span class="nav-number">3.3.</span> <span class="nav-text">usermod(修改帐号)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%8F%A3%E4%BB%A4%E7%AE%A1%E7%90%86"><span class="nav-number">3.4.</span> <span class="nav-text">用户口令管理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux%E7%B3%BB%E7%BB%9F%E7%94%A8%E6%88%B7%E7%BB%84%E7%9A%84%E7%AE%A1%E7%90%86%EF%BC%88%E5%91%BD%E4%BB%A4%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">Linux系统用户组的管理（命令）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#groupadd-%E5%A2%9E%E5%8A%A0%E6%96%B0%E7%9A%84%E7%94%A8%E6%88%B7%E7%BB%84"><span class="nav-number">4.1.</span> <span class="nav-text">groupadd(增加新的用户组)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#groupdel-%E5%88%A0%E9%99%A4%E4%B8%80%E4%B8%AA%E5%B7%B2%E6%9C%89%E7%9A%84%E7%94%A8%E6%88%B7%E7%BB%84"><span class="nav-number">4.2.</span> <span class="nav-text">groupdel(删除一个已有的用户组)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#groupmod-%E4%BF%AE%E6%94%B9%E7%94%A8%E6%88%B7%E7%BB%84%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-number">4.3.</span> <span class="nav-text">groupmod(修改用户组的属性)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
