@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/Sakura.blog/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/Sakura.blog/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+<script>
+    (function () {
+        if ('') {
+            if (prompt('需要输入密码喔') !== '') {
+                alert('看来这位看官没有获取访问权限呢~');
+                if (history.length === 1) {
+                    location.replace("https://ash370.github.io/Sakura.blog/"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/Sakura.blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/Sakura.blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/Sakura.blog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/Sakura.blog/images/%E6%A8%B1%E8%8A%B11.0.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/Sakura.blog/images/%E6%A8%B1%E8%8A%B132%C3%9732.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/Sakura.blog/images/%E6%A8%B1%E8%8A%B116%C3%9716.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/Sakura.blog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="网络,路由,CCNP,OSPF," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简介OSPF (开放最短路径优先）协议，使用链路状态而不是距离矢量进行路径选择。 OSPF传播LSA (链路状态通告），而不是路由表更新。因为只交换 LSA而不交换整个路由表，OSPF网络能以较快的方式收敛。 OSPF同一区域中的每台路由器都有相同的链路状态数据库，（一个包含每台路由器可用接口和可达邻居的列表），也就是说，每台路由器会得知邻居的所有条目，然后自行决定最优路径。【EIGRP是会从邻居">
+<meta property="og:type" content="article">
+<meta property="og:title" content="路由1.0-OSPF协议">
+<meta property="og:url" content="https://ash370.github.io/Sakura.blog/2021/08/05/%E8%B7%AF%E7%94%B11-0-OSPF%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:site_name" content="Sakura">
+<meta property="og:description" content="简介OSPF (开放最短路径优先）协议，使用链路状态而不是距离矢量进行路径选择。 OSPF传播LSA (链路状态通告），而不是路由表更新。因为只交换 LSA而不交换整个路由表，OSPF网络能以较快的方式收敛。 OSPF同一区域中的每台路由器都有相同的链路状态数据库，（一个包含每台路由器可用接口和可达邻居的列表），也就是说，每台路由器会得知邻居的所有条目，然后自行决定最优路径。【EIGRP是会从邻居">
+<meta property="og:locale">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/1287d4eeeda94c08ba6dc3af1b09f345.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/3c5725272b4d448a9893fcc9285a1154.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/87811406a523443f8e7bb6f65a65f3f9.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/3b47c2091cbe415ebe93f482d6564989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/361e753b211f4345a2d55cd95cc54e87.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/69439784944b47ffad9152a71df587d3.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/b290755f4d374ff8866af4cc5b208a67.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/bf0b39bd76e740adaedcf578b3670eae.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/aa3acfeb30014a6fbaaca80fdc50a2a4.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/ec0338ff5df24162ab5d906ad38a1017.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/81cbbb7f45c5417a8503e05499757673.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/503cbfc2a170450d8566f5547770b916.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2021-08-05T11:12:30.000Z">
+<meta property="article:modified_time" content="2021-08-05T11:16:20.734Z">
+<meta property="article:author" content="吴阳阳">
+<meta property="article:tag" content="网络">
+<meta property="article:tag" content="路由">
+<meta property="article:tag" content="CCNP">
+<meta property="article:tag" content="OSPF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/1287d4eeeda94c08ba6dc3af1b09f345.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://ash370.github.io/Sakura.blog/2021/08/05/路由1-0-OSPF协议/"/>
+
+
+
+
+
+  <title>路由1.0-OSPF协议 | Sakura</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/Sakura.blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sakura</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">无最爱，无例外</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/Sakura.blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/Sakura.blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/Sakura.blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/Sakura.blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/Sakura.blog/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://ash370.github.io/Sakura.blog/Sakura.blog/2021/08/05/%E8%B7%AF%E7%94%B11-0-OSPF%E5%8D%8F%E8%AE%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Sakura.blog/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sakura">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">路由1.0-OSPF协议</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-05T19:12:30+08:00">
+                2021-08-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Sakura.blog/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index">
+                    <span itemprop="name">网络</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.2k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  15 min
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>OSPF (开放最短路径优先）协议，使用链路状态而不是距离矢量进行路径选择。 OSPF传播LSA (链路状态通告），而不是路由表更新。因为只交换 LSA而不交换整个路由表，OSPF网络能以较快的方式收敛。</p>
+<p>OSPF同一区域中的每台路由器都有相同的链路状态数据库，（一个包含每台路由器可用接口和可达邻居的列表），也就是说，<mark>每台路由器会得知邻居的所有条目，然后自行决定最优路径。</mark>【EIGRP是会从邻居处得知最优路径】</p>
+<h1 id="一些基本概念"><a href="#一些基本概念" class="headerlink" title="一些基本概念"></a>一些基本概念</h1><h2 id="区域概念"><a href="#区域概念" class="headerlink" title="区域概念"></a>区域概念</h2><ul>
+<li>骨干区域或区域0：骨干区域的两个主要要求是，骨干区域必须连接所有其他非骨干区域，且此骨干区域必须总是连续的；不允许分割骨干区域。一般来说，骨干区域中没有终端用户。</li>
+<li>非骨干区域：此区域的主要功能是连接终端用户 和资源。非骨干区域通常根据功能性或地理位置进行划分。不同非骨干区域之间的流量必须总是经过骨干区域。</li>
+</ul>
+<p>在区域内，路由器交换详细的链路状态信息。</p>
+<p>从一个区域传输到另一个区域的信息中，仅包含LSDB条目的明细汇总，并不包含源区域的拓扑详情。这些来自另一个区域的汇总LSA会被直接放到路由表中。</p>
+<p>（关于LSA后面还有详细说明）</p>
+<h3 id="分不同区域的原因"><a href="#分不同区域的原因" class="headerlink" title="分不同区域的原因"></a>分不同区域的原因</h3><ul>
+<li>减少路由选择的开销</li>
+<li>加速会聚</li>
+<li>用单一的网络地区来减弱网络的不稳定性</li>
+</ul>
+<h2 id="路由器类型"><a href="#路由器类型" class="headerlink" title="路由器类型"></a>路由器类型</h2><h3 id="IR"><a href="#IR" class="headerlink" title="IR"></a>IR</h3><p>内部路由器：所有接口都只连接到一个 OSPF区域。 此路由器完全在区域内部。</p>
+<h3 id="BR"><a href="#BR" class="headerlink" title="BR"></a>BR</h3><p>骨干路由器：至少有一个接口连接到骨干区域。</p>
+<h3 id="ABR"><a href="#ABR" class="headerlink" title="ABR"></a>ABR</h3><p>区域边界路由器：至少有两个接口分别连接不同区域（包含骨干区域在内）。ABR中包含每个区域的LSDB（拓扑表）信息，为每个区域进行路由计算，且在区域之间通告路由信息。</p>
+<h3 id="ASBR"><a href="#ASBR" class="headerlink" title="ASBR"></a>ASBR</h3><p>自治系统边界路由器：至少有一个接口连接到一个OSPF区域，且至少有一个接口连接到外部非OSPF区域。（比如外部用的是EIGRP协议）</p>
+<h3 id="指定路由器和备份路由器"><a href="#指定路由器和备份路由器" class="headerlink" title="指定路由器和备份路由器"></a>指定路由器和备份路由器</h3><ul>
+<li>指定路由器一般称为DR，但是报文中的DR字段是指定路由器的接口IP地址（在选举过程中成为DR的接口）</li>
+<li>备份路由器称为BDR，但是报文中的BDR字段是备份路由器的接口IP地址（在选举过程中成为DR的接口）</li>
+</ul>
+<blockquote>
+<p>在DR和BDR出现之前，每一台路由器和他的邻居之间成为完全网状的OSPF邻接关系，这样5台路由器之间将需要形成10个邻接关系，同时将产生25条LSA。而且在Broadcast即广播多址网络中（比如以太网），还存在自己发出的LSA从邻居的邻居发回来，导致网络上产生很多LSA的拷贝，所以基于这种考虑，产生了DR和BDR</p>
+<hr>
+</blockquote>
+<p>DR的工作：</p>
+<ul>
+<li>描述这个多路访问网络和该网络上剩下的其他相关路由器</li>
+<li>管理这个多路访问网络上的flooding过程</li>
+<li>同时为了冗余性，选取一个BDR作为双备份</li>
+</ul>
+<p><mark>注意：</mark></p>
+<ul>
+<li>只有在广播和非广播的多路访问网络(如以太网和帧中继)的网络分段上才会需要DR/BDR。点到点(串口)不需要</li>
+<li>每台路由器都仅与DR/BDR建立完全邻接关系，和其他路由器不需要邻接，只向DR/BDR发链路状态信息。（发送给DR的hello包，组播地址224.0.0.6）</li>
+</ul>
+<h2 id="三种表"><a href="#三种表" class="headerlink" title="三种表"></a>三种表</h2><h3 id="邻居表"><a href="#邻居表" class="headerlink" title="邻居表"></a>邻居表</h3><p>hello包维护邻居关系，IP组播周期性发送。</p>
+<p>组播地址：224.0.0.5，224.0.0.6（发给指定路由器DR）</p>
+<p><mark>邻居要建立邻接才能共享路由更新</mark>（点到点链路不需要）</p>
+<p>建立了邻接才能进入拓扑表</p>
+<h3 id="拓扑表（LSDB）"><a href="#拓扑表（LSDB）" class="headerlink" title="拓扑表（LSDB）"></a>拓扑表（LSDB）</h3><p>LSA更新并维护数据库，数据库即拓扑表</p>
+<h3 id="路由表"><a href="#路由表" class="headerlink" title="路由表"></a>路由表</h3><p>SPF算法构建SPF树，最优路径进入路由表</p>
+<h1 id="LSA基本概念"><a href="#LSA基本概念" class="headerlink" title="LSA基本概念"></a>LSA基本概念</h1><p>LSA全称链路状态通告，它包含有在OSPF路由器中共享的链路状态和路由信息。</p>
+<h1 id="七类LSA"><a href="#七类LSA" class="headerlink" title="七类LSA"></a>七类LSA</h1><h2 id="公有的头部"><a href="#公有的头部" class="headerlink" title="公有的头部"></a>公有的头部</h2><p><img src="https://img-blog.csdnimg.cn/1287d4eeeda94c08ba6dc3af1b09f345.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70" alt="image"></p>
+<p>options：指明当前LSA的能力</p>
+<p>三元组（索引）：</p>
+<ul>
+<li>LS Type</li>
+<li>Link State ID</li>
+<li>Advertising Router</li>
+</ul>
+<blockquote>
+<p>作用：</p>
+<p>比较LSA数目的多少，确定双方是否完全一样，是否有差别</p>
+</blockquote>
+<p>LS Age（老化时间）；序列号 ；校验和来确定判断新旧</p>
+<blockquote>
+<p>序列号越大越新，每一次LSA泛洪，序列号+1<br>序列号确定 比较校验和，越大越新<br>校验和确定比较老化时间，LS Age越小越新</p>
+</blockquote>
+<h2 id="1类LSA（Router-LSA）"><a href="#1类LSA（Router-LSA）" class="headerlink" title="1类LSA（Router LSA）"></a>1类LSA（Router LSA）</h2><p>每台路由器为所属的每个区域生成路由器链路通告。路由器链路通告描述了区域中的路由器链路状态， 只在特定区域中泛洪。</p>
+<p><img src="https://img-blog.csdnimg.cn/3c5725272b4d448a9893fcc9285a1154.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70" alt="image"></p>
+<p>内容：拓扑+路由（即邻居和网段）</p>
+<p>传播范围：intra-area(本区域内)不跨越ABR</p>
+<p>一些字段：</p>
+<ul>
+<li><p>Link State ID：源路由器RID（即路由器本身RID）</p>
+</li>
+<li><p>Advertising Router：通告自己的RID</p>
+</li>
+<li><p>Flags：描述自己的身份</p>
+<blockquote>
+<p>V（Virtual Link endpoint）：虚链路端点<br>E（AS boundary router）：ASBR<br>B（Area border router）：ABR</p>
+<hr>
+</blockquote>
+</li>
+</ul>
+<p>Links：描述自身的拓扑</p>
+<p><img src="https://img-blog.csdnimg.cn/87811406a523443f8e7bb6f65a65f3f9.png" alt="image"></p>
+<ul>
+<li><p>1：Point-to-Point：描述邻居的拓扑</p>
+<blockquote>
+<p>Link ID：邻居路由器的RID<br>Link Data：始发路由器接口IP地址<br>Link Type：1</p>
+</blockquote>
+</li>
+<li><p>2：Transit Network：描述DR接口&amp;DR和自己相连的接口</p>
+<blockquote>
+<p>Link ID：DR接口的IP地址<br>Link Data：始发路由器接口IP地址<br>Link Type：2</p>
+</blockquote>
+</li>
+<li><p>3：Stub network：表示自身的路由</p>
+<blockquote>
+<p>Link ID：网络/子网的IP地址<br>Link Data：网络/子网的掩码<br>Link Type：3</p>
+</blockquote>
+</li>
+<li><p>4：Virtual-Link：</p>
+<blockquote>
+<p>Link ID：邻居路由器的RID<br>Link Data：邻居的接口IP地址<br>Link Type：4</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="2类LSA（Network-LSA）"><a href="#2类LSA（Network-LSA）" class="headerlink" title="2类LSA（Network LSA）"></a>2类LSA（Network LSA）</h2><p>DR为广播型网络生成网络链路通告。网络链路通告中描述了一组连接到特定多路访问网络的路由器。网络链路通告在包含该网络的区城中泛洪。</p>
+<p><img src="https://img-blog.csdnimg.cn/3b47c2091cbe415ebe93f482d6564989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70" alt="image"></p>
+<p>内容：拓扑+路由。和DR相连的所有网络信息</p>
+<p>传播范围：intra-area，不跨越ABR</p>
+<p>一些字段：</p>
+<ul>
+<li>Link State ID：DR的接口IP</li>
+<li>Advertising Router：通告DR的RID</li>
+<li>Attached Router：邻居的RID</li>
+</ul>
+<h2 id="3类LSA（Summary-LSA）"><a href="#3类LSA（Summary-LSA）" class="headerlink" title="3类LSA（Summary LSA）"></a>3类LSA（Summary LSA）</h2><p>ABR将从一个区域中学习到的信息汇总成汇总链路通告， 并发给另一个区域。汇总并不是默认开启的 。</p>
+<p>内容：路由。告知区域内路由器区域外的路由条目(网段)</p>
+<p>传播范围：inter-area，跨越ABR</p>
+<p>一些字段：</p>
+<ul>
+<li>头部+掩码+Metric（只有路由信息）</li>
+<li>Link State ID：内部的网段</li>
+<li>Advertising Router：距离最近的ABR的RID</li>
+</ul>
+<p><mark>Ad Router 逐跳变，每经过一个ABR都会改变</mark></p>
+<h2 id="4类LSA（ASBR-summary-LSA）"><a href="#4类LSA（ASBR-summary-LSA）" class="headerlink" title="4类LSA（ASBR summary LSA）"></a>4类LSA（ASBR summary LSA）</h2><p>ASBR汇总链路通告负责通知OSPF 域的其余部分，如何到达ASBR。</p>
+<p>内容：拓扑。ABR通告如何到达ASBR</p>
+<p>传播范围：跨区域</p>
+<p>一些字段：</p>
+<ul>
+<li>Link State ID：ASBR的RID</li>
+<li>Advertising Router：距离最近的ABR的RID</li>
+</ul>
+<p><mark>Ad Router 逐跳变，每经过一个ABR都会改变</mark></p>
+<h2 id="5类LSA（AS-External-LSA）"><a href="#5类LSA（AS-External-LSA）" class="headerlink" title="5类LSA（AS External LSA）"></a>5类LSA（AS External LSA）</h2><p>自治系统外部链路通告由 ASBR生成， 描述了到达自治系统外部目的网络的路由。</p>
+<p>内容：路由</p>
+<p>传播范围：跨区域</p>
+<p>一些字段：</p>
+<ul>
+<li>Link State ID：外部网段</li>
+<li>Advertising Router：ASBR的RID</li>
+<li>Type：E1，E2</li>
+<li>Tag：重分布的时候通过route-map打tag</li>
+</ul>
+<p><mark>只有E和N类型的LSA可以打tag；Ad Router全称不变</mark></p>
+<h2 id="6类LSA"><a href="#6类LSA" class="headerlink" title="6类LSA"></a>6类LSA</h2><p>组播OSPF应用中 使用的专用LSA。</p>
+<h2 id="7类LSA（NSSA-external-LSA）"><a href="#7类LSA（NSSA-external-LSA）" class="headerlink" title="7类LSA（NSSA external LSA）"></a>7类LSA（NSSA external LSA）</h2><p>内容：路由。在NSSA区域中描述引入的外部路由</p>
+<h1 id="区域类型"><a href="#区域类型" class="headerlink" title="区域类型"></a>区域类型</h1><p>Stub（末梢）</p>
+<ul>
+<li>只允许1,2,3号LSA进入</li>
+<li>过滤5号LSA</li>
+<li>自动产生默认路由</li>
+</ul>
+<p>Totally stub（完全末梢）Cisco独有</p>
+<ul>
+<li>只允许1,2号LSA进入</li>
+<li>禁止3,5号LSA</li>
+<li>自动产生默认路由</li>
+</ul>
+<p>NSSA</p>
+<ul>
+<li>禁止4,5号LSA</li>
+<li>外部自治系统的路由信息从ASBR以7号LSA形式进入NSSA区域</li>
+<li>7号LSA从NSSA经过ASBR去往其他区域会转化为5号LSA</li>
+<li>default-information originate产生默认路由</li>
+</ul>
+<p>Totally NSSA（Cisco独有）</p>
+<ul>
+<li>过滤3,5号LSA</li>
+<li>外部自治系统的路由信息从ASBR以7号LSA形式进入NSSA区域</li>
+<li>自动产生默认路由</li>
+</ul>
+<h1 id="五种路由协议包"><a href="#五种路由协议包" class="headerlink" title="五种路由协议包"></a>五种路由协议包</h1><p>OSPF使用5种类型的路由协议包，共享通用的协议头部（OSPF Header）。每个OSPF包被直接封装在IP头部中。OSPF的<mark>IP协议号是89</mark>。</p>
+<h2 id="共享的同一头部"><a href="#共享的同一头部" class="headerlink" title="共享的同一头部"></a>共享的同一头部</h2><p><img src="https://img-blog.csdnimg.cn/361e753b211f4345a2d55cd95cc54e87.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70" alt="image"></p>
+<p>Message Type：指明这个数据包是五种类型中的哪一种</p>
+<p>Source OSPF Router：这里是路由器的RID（router-id）</p>
+<h2 id="Hello包"><a href="#Hello包" class="headerlink" title="Hello包"></a>Hello包</h2><p><img src="https://img-blog.csdnimg.cn/69439784944b47ffad9152a71df587d3.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>作用：</p>
+<ul>
+<li>发现邻居，维持邻居关系（保活）</li>
+<li>保证邻居能够双向通信（参数同步）</li>
+<li>选举DR/BDR</li>
+</ul>
+<p>option字段：当前Hello包具有哪些能力（相应位置1）</p>
+<p><img src="https://img-blog.csdnimg.cn/b290755f4d374ff8866af4cc5b208a67.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70" alt="image"></p>
+<p>报文各字段含义：</p>
+<p><img src="https://img-blog.csdnimg.cn/bf0b39bd76e740adaedcf578b3670eae.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70" alt="image"></p>
+<h2 id="DBD（数据库描述）包"><a href="#DBD（数据库描述）包" class="headerlink" title="DBD（数据库描述）包"></a>DBD（数据库描述）包</h2><p><img src="https://img-blog.csdnimg.cn/aa3acfeb30014a6fbaaca80fdc50a2a4.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70" alt="image"><br>作用：</p>
+<ul>
+<li>描述LSDB（拓扑表），使路由器之间可以比对数据库是否同步</li>
+<li>选举DR/BDR</li>
+<li>交换数据库的摘要信息</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">摘要：LSA头部</span><br><span class="line"></span><br><span class="line">通过比较LSA头部就可以比较LSA的数目和新旧</span><br></pre></td></tr></table></figure>
+
+<p>报文各字段含义：</p>
+<ul>
+<li><p>OSPF Header：通用头部，前面有描述，这里不做赘述</p>
+</li>
+<li><p>OSPF DB Description</p>
+<ul>
+<li>Interface MTU：交换数据的每个包的最大容量，按1500将数据库切片成数据包发送，每个数据包大小为1500</li>
+<li>option：和前面大同小异</li>
+<li>DB Description 置位：<blockquote>
+<p>R<br>MS：置1表示为Master<br>I，M：组合来保证数据包的顺序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">00：不是第一个包，后面也没包了 即最后一个包</span><br><span class="line">01：不是第一个包，后面还有 即若干数据包的中间一个包</span><br><span class="line">10：是第一个包，后面没有（说明数据库较小）</span><br><span class="line">11：是第一个，后面还有 即第一个包，（说明数据库被拆分）</span><br></pre></td></tr></table></figure>
+<hr>
+</blockquote>
+</li>
+<li>DD Seq：这个包的序号。OSPF基于IP而不是TCP，IP协议不保证有序，这个序列号保证了该协议的可靠</li>
+</ul>
+<blockquote>
+<p>I,M置位和DD Seq，三者确保了数据包的有序性</p>
+</blockquote>
+</li>
+<li><p>LSA Type（前面有各种类型的具体描述）</p>
+</li>
+</ul>
+<h2 id="LSR（链路状态请求）包"><a href="#LSR（链路状态请求）包" class="headerlink" title="LSR（链路状态请求）包"></a>LSR（链路状态请求）包</h2><p><img src="https://img-blog.csdnimg.cn/ec0338ff5df24162ab5d906ad38a1017.png" alt="image"></p>
+<p>作用：</p>
+<ul>
+<li>在数据库同步过程中使用。</li>
+<li>路由器会发送LSR, 请求其OSPF邻居发送本地缺失LSA（<mark>三元组</mark>确定）的最新版本。（关于三元组，前面有描述）</li>
+</ul>
+<h2 id="LSU（链路状态更新）包"><a href="#LSU（链路状态更新）包" class="headerlink" title="LSU（链路状态更新）包"></a>LSU（链路状态更新）包</h2><p><img src="https://img-blog.csdnimg.cn/81cbbb7f45c5417a8503e05499757673.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>作用：</p>
+<ul>
+<li>泛洪LSA, 以及发送对LSR包的LSA响应。<blockquote>
+<p>LSA响应只会发给之前以LSR包形式请求LSA的直连邻居。</p>
+</blockquote>
+</li>
+<li>进行泛洪时，邻居路由器负责把收到的LSA信息(这个信息是在收到的LSR中)重新封装在新的LSU包中。</li>
+</ul>
+<p>注意：<mark>这个包里放着具体的LSA，不是只有三元组了</mark></p>
+<h2 id="LSAck（链路状态确认）包"><a href="#LSAck（链路状态确认）包" class="headerlink" title="LSAck（链路状态确认）包"></a>LSAck（链路状态确认）包</h2><p><img src="https://img-blog.csdnimg.cn/503cbfc2a170450d8566f5547770b916.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTU2MDQxNw==,size_16,color_FFFFFF,t_70" alt="image"></p>
+<p>作用：</p>
+<ul>
+<li>负责进行可靠的LSA泛洪。（OSPF基于IP，不保证可靠性；如果是基于TCP，TCP的ack就能达到该目的）</li>
+<li>路由器必须明确确认每个收到的LSA, 可以用 一个LSAck包确认多个LSA。</li>
+</ul>
+<h1 id="邻接关系的建立（7种状态）"><a href="#邻接关系的建立（7种状态）" class="headerlink" title="邻接关系的建立（7种状态）"></a>邻接关系的建立（7种状态）</h1><ol>
+<li><p>Down：没有给邻居发任何报文，也没有收到任何报文。</p>
+<blockquote>
+<p>写network命令，发hello包（组播形式）</p>
+</blockquote>
+</li>
+<li><p>Init：当路由器从邻居收到了一个Hello包，但是没有在邻居的Hello包中看到自己的路由器ID时， 它将转为init状态。</p>
+<blockquote>
+<p>在此状态中，路由器将记录所有邻居的路由器ID, 并开始将它们包含在发给邻居的Hello包中。</p>
+</blockquote>
+</li>
+<li><p>Two-way：邻居收到了一个hello，这个hello中有我的RID，表示邻居已经收到了我的hello报文，说明之前曾交互过hello报文，此时一个双向通信已经建立</p>
+<blockquote>
+<p>如果是多路访问链路，进行DR/BDR的选举</p>
+<h2 id="DR-BDR选举规则"><a href="#DR-BDR选举规则" class="headerlink" title="DR/BDR选举规则"></a>DR/BDR选举规则</h2><p>a. 比较优先级（接口优先级为0表示放弃选举，默认为1，范围0-255）<br>b. 优先级相同，比较RID，越大越优先<br>注意：OSPF为非抢占性，修改优先级后必须重启OSPF进程（clear ip ospf process）</p>
+</blockquote>
+</li>
+<li><p>Exstart：确定谁发DBD。选举主从路由器，并且确认邻接建立的初始序列号。当路由器收到初始的DBD包时， 它把发出这个DBD包的邻居状态转为ExStart</p>
+<blockquote>
+<p>一开始发送DBD包为空，没有任何LSA报头信息，双方宣告自己为主路由器。交互过程中RID高的为主路由器，较低为从路由器，从路由器回复一个MS设置为0的DBD包，该包是第一个携带LSA摘要信息的数据包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MTU不匹配的邻居，会保持在exstart状态(邻居MTU较大)，</span><br><span class="line">MTU较小的会重复init态到exchange态</span><br></pre></td></tr></table></figure></blockquote>
+</li>
+<li><p>Exchange：主路由器带动从路由器交互描述整个链路状态的 DBD 报文。</p>
+</li>
+<li><p>Loading：根据交互的DBD 报文可以得知双方需要的LSA 信息，根据自己没有而邻居有的LSA向邻居请求。单播发LSR</p>
+</li>
+<li><p>Full：收到邻居的LSU回复。链路状态请求表为空，双方邻接关系建立完成</p>
+</li>
+</ol>
+<h1 id="邻接关系的建立条件"><a href="#邻接关系的建立条件" class="headerlink" title="邻接关系的建立条件"></a>邻接关系的建立条件</h1><ol>
+<li><p>报文头部中匹配的字段</p>
+<blockquote>
+<p> a. 版本一致</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">V2：IPv4</span><br><span class="line">V3：IPv6</span><br></pre></td></tr></table></figure>
+<p> b. RID不能冲突</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果发生冲突，会因为无法选举出主从路由器而停留在Exstart/Exchange状态</span><br></pre></td></tr></table></figure>
+<p> c. 一条链路的两端必须在同一个区域</p>
+<p> d. 区域类型和认证类型要一致</p>
+<hr>
+</blockquote>
+</li>
+<li><p>Hello 包中要匹配的字段</p>
+<blockquote>
+<p>a. 掩码一致</p>
+<p>b. hello时间的dead time需要一致</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">失效计时器值。</span><br><span class="line">当此计时器过期时， 路由器将终结邻居关系。 </span><br><span class="line">每次路由器从特定邻居收到一个OSPFHello包时， 它都会重置失效计时器值。</span><br></pre></td></tr></table></figure>
+<p>c. option中的E位、N位一致</p>
+<p>d.  NBMA中要对邻居指peer，双方要互指</p>
+<p>e. 建立邻居的接口不能是静默接口(silent- interface)</p>
+<p>f. Router priority字段</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">为0：该路由器放弃选举DR/BDR</span><br><span class="line">选举过程必须至少一个DR，网络中至少有一个路由器接口的优先级不为0</span><br></pre></td></tr></table></figure>
+<hr>
+</blockquote>
+</li>
+<li><p>DBD报文中要匹配的字段</p>
+<blockquote>
+<p>MTU：<br>如果不匹配，就会停在exstart状态，这个状态双方交互first DBD选择主从，如果开启MTU检测，只有一致才可以选出主从</p>
+<hr>
+</blockquote>
+</li>
+</ol>
+<h1 id="整个网络路由过程"><a href="#整个网络路由过程" class="headerlink" title="整个网络路由过程"></a>整个网络路由过程</h1><ol>
+<li>建立邻居邻接关系：OSPF路由器必须与其邻居建立邻接关系之后才能共享信息。OSPF路由器从所有启用OSPF的接口发送Hello包，用来确定这些链路上是否有OSPF邻居。 如果发现了邻居，OSPF路由器会尝试与该邻居建立邻接关系。</li>
+<li>交换链路状态通告：邻接关系建立后， 路由器交换LSA (链路状态通告）。LSA包含每条直连链路的状态和开销。 路由器将LSA泛洪给邻接的邻居。 接收到LSA的邻接邻居立即将LSA泛洪给其他的直连邻居， 直到区域中的所有路由器都有相同的LSA为止。</li>
+<li>构建拓扑表：收到LSA之后，OSPF路由器会基千收到的LSA构建LSDB (拓扑表）。此数据库中最终会拥有网络拓扑的所有信息。 对于区域中所有路由器，LSDB中一定都要有相同的信息。</li>
+<li>执行SPF算法：路由器执行SPF算法。SPF算法构建SPF树。</li>
+<li>构建拓扑表：路由器把SPF树中的最优路径放入到路由表中， 并基于路由表中的条目作出路由决策。</li>
+</ol>
+<h1 id="接口网络类型"><a href="#接口网络类型" class="headerlink" title="接口网络类型"></a>接口网络类型</h1><ol>
+<li>Point-to-point（HDLC/PPP）：组播地址224.0.0.5，hello发给所有路由器动态检测邻居，直接邻接(只有两台设备)，不要DR/BDR</li>
+<li>Broadcast（Ethernet）：有DR，发给DR的组播地址224.0.0.6</li>
+<li>NBMA（FR、ATM等）：非广播的多路访问型网络</li>
+<li> Loopback：默认情况下，配置在环回口的任意子网通告为/32的主机路由。ip ospf network point-to-point命令可改为点到点</li>
+<li>Virtual-Link：虚链路</li>
+</ol>
+<h1 id="路由认证"><a href="#路由认证" class="headerlink" title="路由认证"></a>路由认证</h1><ol>
+<li>NULL</li>
+</ol>
+<ol start="2">
+<li>明文认证</li>
+</ol>
+<ol start="3">
+<li>密文认证：MD5</li>
+</ol>
+<ol start="4">
+<li>区域认证：全接口开认证</li>
+</ol>
+<ol start="5">
+<li>接口认证：<blockquote>
+<p>a. 接口配置密钥</p>
+<p>b. 接口、区域进程开启认证</p>
+<p>c. 虚链路认证（配置在进程虚链路指令后，配置原理同上）</p>
+<hr>
+</blockquote>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+	
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    吴阳阳
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ash370.github.io/Sakura.blog/2021/08/05/%E8%B7%AF%E7%94%B11-0-OSPF%E5%8D%8F%E8%AE%AE/" title="路由1.0-OSPF协议">https://ash370.github.io/Sakura.blog/2021/08/05/%E8%B7%AF%E7%94%B11-0-OSPF%E5%8D%8F%E8%AE%AE/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/Sakura.blog/tags/%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i>网络</a>
+          
+            <a href="/Sakura.blog/tags/%E8%B7%AF%E7%94%B1/" rel="tag"><i class="fa fa-tag"></i>路由</a>
+          
+            <a href="/Sakura.blog/tags/CCNP/" rel="tag"><i class="fa fa-tag"></i>CCNP</a>
+          
+            <a href="/Sakura.blog/tags/OSPF/" rel="tag"><i class="fa fa-tag"></i>OSPF</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Sakura.blog/2021/07/29/Linux1-2-%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/" rel="next" title="Linux1.2-网络命令">
+                <i class="fa fa-chevron-left"></i> Linux1.2-网络命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/Sakura.blog/archives%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/Sakura.blog/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/Sakura.blog/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">一些基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%9F%9F%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.</span> <span class="nav-text">区域概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E4%B8%8D%E5%90%8C%E5%8C%BA%E5%9F%9F%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.1.1.</span> <span class="nav-text">分不同区域的原因</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%99%A8%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.2.</span> <span class="nav-text">路由器类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#IR"><span class="nav-number">2.2.1.</span> <span class="nav-text">IR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BR"><span class="nav-number">2.2.2.</span> <span class="nav-text">BR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ABR"><span class="nav-number">2.2.3.</span> <span class="nav-text">ABR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASBR"><span class="nav-number">2.2.4.</span> <span class="nav-text">ASBR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E8%B7%AF%E7%94%B1%E5%99%A8%E5%92%8C%E5%A4%87%E4%BB%BD%E8%B7%AF%E7%94%B1%E5%99%A8"><span class="nav-number">2.2.5.</span> <span class="nav-text">指定路由器和备份路由器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E8%A1%A8"><span class="nav-number">2.3.</span> <span class="nav-text">三种表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%82%BB%E5%B1%85%E8%A1%A8"><span class="nav-number">2.3.1.</span> <span class="nav-text">邻居表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%93%E6%89%91%E8%A1%A8%EF%BC%88LSDB%EF%BC%89"><span class="nav-number">2.3.2.</span> <span class="nav-text">拓扑表（LSDB）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E8%A1%A8"><span class="nav-number">2.3.3.</span> <span class="nav-text">路由表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LSA%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">3.</span> <span class="nav-text">LSA基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%83%E7%B1%BBLSA"><span class="nav-number">4.</span> <span class="nav-text">七类LSA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AC%E6%9C%89%E7%9A%84%E5%A4%B4%E9%83%A8"><span class="nav-number">4.1.</span> <span class="nav-text">公有的头部</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E7%B1%BBLSA%EF%BC%88Router-LSA%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">1类LSA（Router LSA）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E7%B1%BBLSA%EF%BC%88Network-LSA%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">2类LSA（Network LSA）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E7%B1%BBLSA%EF%BC%88Summary-LSA%EF%BC%89"><span class="nav-number">4.4.</span> <span class="nav-text">3类LSA（Summary LSA）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E7%B1%BBLSA%EF%BC%88ASBR-summary-LSA%EF%BC%89"><span class="nav-number">4.5.</span> <span class="nav-text">4类LSA（ASBR summary LSA）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E7%B1%BBLSA%EF%BC%88AS-External-LSA%EF%BC%89"><span class="nav-number">4.6.</span> <span class="nav-text">5类LSA（AS External LSA）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%E7%B1%BBLSA"><span class="nav-number">4.7.</span> <span class="nav-text">6类LSA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7%E7%B1%BBLSA%EF%BC%88NSSA-external-LSA%EF%BC%89"><span class="nav-number">4.8.</span> <span class="nav-text">7类LSA（NSSA external LSA）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8C%BA%E5%9F%9F%E7%B1%BB%E5%9E%8B"><span class="nav-number">5.</span> <span class="nav-text">区域类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E7%A7%8D%E8%B7%AF%E7%94%B1%E5%8D%8F%E8%AE%AE%E5%8C%85"><span class="nav-number">6.</span> <span class="nav-text">五种路由协议包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E7%9A%84%E5%90%8C%E4%B8%80%E5%A4%B4%E9%83%A8"><span class="nav-number">6.1.</span> <span class="nav-text">共享的同一头部</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hello%E5%8C%85"><span class="nav-number">6.2.</span> <span class="nav-text">Hello包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DBD%EF%BC%88%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8F%8F%E8%BF%B0%EF%BC%89%E5%8C%85"><span class="nav-number">6.3.</span> <span class="nav-text">DBD（数据库描述）包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSR%EF%BC%88%E9%93%BE%E8%B7%AF%E7%8A%B6%E6%80%81%E8%AF%B7%E6%B1%82%EF%BC%89%E5%8C%85"><span class="nav-number">6.4.</span> <span class="nav-text">LSR（链路状态请求）包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSU%EF%BC%88%E9%93%BE%E8%B7%AF%E7%8A%B6%E6%80%81%E6%9B%B4%E6%96%B0%EF%BC%89%E5%8C%85"><span class="nav-number">6.5.</span> <span class="nav-text">LSU（链路状态更新）包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSAck%EF%BC%88%E9%93%BE%E8%B7%AF%E7%8A%B6%E6%80%81%E7%A1%AE%E8%AE%A4%EF%BC%89%E5%8C%85"><span class="nav-number">6.6.</span> <span class="nav-text">LSAck（链路状态确认）包</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%82%BB%E6%8E%A5%E5%85%B3%E7%B3%BB%E7%9A%84%E5%BB%BA%E7%AB%8B%EF%BC%887%E7%A7%8D%E7%8A%B6%E6%80%81%EF%BC%89"><span class="nav-number">7.</span> <span class="nav-text">邻接关系的建立（7种状态）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DR-BDR%E9%80%89%E4%B8%BE%E8%A7%84%E5%88%99"><span class="nav-number">7.1.</span> <span class="nav-text">DR&#x2F;BDR选举规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%82%BB%E6%8E%A5%E5%85%B3%E7%B3%BB%E7%9A%84%E5%BB%BA%E7%AB%8B%E6%9D%A1%E4%BB%B6"><span class="nav-number">8.</span> <span class="nav-text">邻接关系的建立条件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B4%E4%B8%AA%E7%BD%91%E7%BB%9C%E8%B7%AF%E7%94%B1%E8%BF%87%E7%A8%8B"><span class="nav-number">9.</span> <span class="nav-text">整个网络路由过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E7%BD%91%E7%BB%9C%E7%B1%BB%E5%9E%8B"><span class="nav-number">10.</span> <span class="nav-text">接口网络类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E8%AE%A4%E8%AF%81"><span class="nav-number">11.</span> <span class="nav-text">路由认证</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heartbeat"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">吴阳阳</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">16.8k</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user">访客数</i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye">总访问量</i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/Sakura.blog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Sakura.blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Sakura.blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Sakura.blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Sakura.blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Sakura.blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/Sakura.blog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/Sakura.blog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/Sakura.blog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/Sakura.blog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/Sakura.blog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/Sakura.blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/Sakura.blog/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/Sakura.blog/live2dw/assets/tororo.model.json"},"display":{"position":"left","width":300,"height":600},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
